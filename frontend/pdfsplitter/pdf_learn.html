@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Learn About PDF Splitter | Astra</title>
+<link rel="stylesheet" href="pdf_learn.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- Floating blurred background layers -->
+<div class="bg-layer layer-deep"></div>
+<div class="bg-layer layer-mid"></div>
+
+<main class="learn-container">
+  <section class="learn-hero">
+    <h1>PDF Splitter Tool</h1>
+    <p>Learn how Astra’s PDF Splitter works and how to divide your PDFs efficiently.</p>
+  </section>
+
+  <section class="learn-content">
+    <div class="card">
+      <h2>📄 What is a PDF Splitter?</h2>
+      <p>A PDF Splitter allows you to divide a single PDF into multiple smaller PDFs by specifying page ranges. This helps organize, share, or extract content easily.</p>
+    </div>
+
+    <div class="card">
+      <h2>⚙️ How It Works</h2>
+      <ol>
+        <li>Upload your PDF file.</li>
+        <li>Specify the number of splits you want.</li>
+        <li>Enter the start and end page for each split.</li>
+        <li>Click Generate Splits and download the resulting PDFs.</li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <h2>💡 Tips for Best Results</h2>
+      <ul>
+        <li>Ensure page ranges are correct and do not exceed total pages.</li>
+        <li>Overlapping pages will show a confirmation before splitting.</li>
+        <li>Use this tool for large PDFs to extract only the needed sections.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>🔒 Privacy First</h2>
+      <p>Astra’s PDF Splitter works locally in your browser — your files are never uploaded to a server. Everything is processed on your device securely.</p>
+    </div>
+
+    <div class="button-row">
+      <a href="pdf_splitter.html" class="btn-primary">✨ Try PDF Splitter</a>
+      <a href="../index.html" class="btn-secondary">← Back to Home</a>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div>© <span id="yearPDF"></span> Astra — Built with care ✦</div>
+</footer>
+
+<script>
+  document.getElementById("yearPDF").textContent = new Date().getFullYear();
+</script>
+
+</body>
+</html>

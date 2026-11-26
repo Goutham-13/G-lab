@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Learn About QR Code Generator | Astra</title>
+  <link rel="stylesheet" href="qr_learn.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="nav-left">
+      <a href="../index.html" class="logo">Astra ✦</a>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="learn-container">
+    <section class="learn-hero">
+      <h1>QR Code Generator</h1>
+      <p>Understand how Astra’s QR Generator works and how to use it effectively.</p>
+    </section>
+
+    <section class="learn-content">
+      <div class="card">
+        <h2>🔍 What is a QR Code?</h2>
+        <p>
+          A QR (Quick Response) code is a digital pattern that stores data like text, URLs, or messages.
+          Scanning it with a smartphone instantly reveals the embedded content.
+        </p>
+      </div>
+
+      <div class="card">
+        <h2>⚙️ How It Works</h2>
+        <ol>
+          <li>Type a text, URL, or message into the input box.</li>
+          <li>Astra instantly generates a QR image using fast, local JavaScript rendering.</li>
+          <li>You can download the generated QR as a PNG file.</li>
+        </ol>
+      </div>
+
+      <div class="card">
+        <h2>💡 Tips for Best Results</h2>
+        <ul>
+          <li>Keep your text short for clear, scannable results.</li>
+          <li>Use dark colors on a light background for better visibility.</li>
+          <li>Always test your QR before sharing.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2>🔒 Privacy First</h2>
+        <p>
+          Astra’s QR Generator works locally — your data never leaves your browser. 
+          Nothing is stored or sent to any server.
+        </p>
+      </div>
+
+      <div class="button-row">
+        <a href="qr.html" class="btn-primary">✨ Try QR Tool</a>
+        <a href="../index.html" class="btn-secondary">← Back to Home</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div>© <span id="year2"></span> Astra — Built with care ✦</div>
+  </footer>
+
+  <script>
+    document.getElementById("year2").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>

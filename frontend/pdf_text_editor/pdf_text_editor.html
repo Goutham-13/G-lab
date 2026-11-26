@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Astra – PDF Text Editor</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Patrick+Hand&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="pdf_text_editor.css" />
+
+  <!-- PDF.js for rendering -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <!-- pdf-lib for exporting edited PDF -->
+  <script src="https://cdn.jsdelivr.net/npm/pdf-lib/dist/pdf-lib.min.js"></script>
+  <!-- Tesseract.js for OCR -->
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+</head>
+
+<body>
+  <!-- Notebook background -->
+  <div class="notebook-bg"></div>
+
+  <!-- Top bar -->
+  <header class="topbar">
+    <div class="brand">📘 Astra – PDF Text Editor</div>
+    <button class="btn-small" onclick="window.location.href='../index.html'">Back to home</button>
+  </header>
+
+  <main class="editor-layout">
+    <!-- Left: controls -->
+    <section class="editor-sidebar">
+      <h1 class="ink-black">Edit text on your PDF.</h1>
+      <p class="ink-blue">
+        Upload a PDF, we detect text automatically. Click and edit like normal,
+        drag using the handle, change style, then export.
+      </p>
+
+      <div class="control-block">
+        <label class="ink-black">Upload PDF:</label>
+        <input type="file" id="pdfFile" accept="application/pdf" />
+      </div>
+
+      <div class="control-block">
+        <button id="reOcrBtn" class="btn-try" disabled>Re-detect text</button>
+      </div>
+
+      <div class="control-block">
+        <button id="addTextBoxBtn" class="btn-try" disabled>Add empty text box</button>
+      </div>
+
+      <!-- TEXT TOOLBAR -->
+      <div class="toolbar">
+        <label class="toolbar-label">Font</label>
+        <select id="fontFamily">
+          <option value="'Patrick Hand', cursive">Notebook (Hand)</option>
+          <option value="Inter, sans-serif">Inter</option>
+        </select>
+
+        <label class="toolbar-label">Size</label>
+        <select id="fontSize">
+          <option value="10">10</option>
+          <option value="12">12</option>
+          <option value="14">14</option>
+          <option value="16" selected>16</option>
+          <option value="18">18</option>
+          <option value="20">20</option>
+          <option value="24">24</option>
+        </select>
+
+        <label class="toolbar-label">Color</label>
+        <input type="color" id="fontColor" value="#000000" />
+
+        <div class="toolbar-buttons">
+          <button id="btnBold" class="toolbar-btn">B</button>
+          <button id="btnItalic" class="toolbar-btn">I</button>
+          <button id="btnUnderline" class="toolbar-btn">U</button>
+        </div>
+      </div>
+
+      <p class="hint ink-blue">
+        Tips:<br />
+        • Click inside a text area to edit (backspace, type, etc).<br />
+        • Drag using the small corner handle.<br />
+        • Press <strong>Delete</strong> key to remove a box.
+      </p>
+
+      <div class="control-block">
+        <button id="downloadPdfBtn" class="btn-try" disabled>Download edited PDF</button>
+      </div>
+
+      <p id="status" class="status ink-red"></p>
+    </section>
+
+    <!-- Right: canvas area -->
+    <section class="editor-canvas-wrap">
+      <div id="pageContainer" class="page-container">
+        <canvas id="pdfCanvas"></canvas>
+        <!-- Text boxes overlay here -->
+      </div>
+    </section>
+  </main>
+
+  <script src="pdf_text_editor.js"></script>
+</body>
+</html>

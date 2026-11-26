@@ -1,0 +1,238 @@
+/* GLOBAL */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: #FFFDF8;
+  font-family: "Inter", sans-serif;
+  color: #333;
+}
+
+/* NOTEBOOK GRID BG */
+.notebook-bg {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(0,0,0,0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,0,0,0.07) 1px, transparent 1px);
+  background-size: 32px 32px;
+  opacity: 0.18;
+  z-index: -1;
+}
+
+/* INK STYLES */
+.ink-black { font-family: "Patrick Hand"; color: #222; }
+.ink-blue  { font-family: "Patrick Hand"; color: #1A55D8; }
+.ink-red   { font-family: "Patrick Hand"; color: #D32828; }
+
+/* TOPBAR */
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 32px;
+  border-bottom: 2px solid #dedcdc;
+  background: #fff;
+}
+.brand {
+  font-family: "Patrick Hand";
+  font-size: 24px;
+}
+.btn-small {
+  font-size: 14px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #999;
+  background: #fff;
+  cursor: pointer;
+}
+
+/* LAYOUT */
+.editor-layout {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 24px;
+  padding: 20px 24px 32px;
+}
+
+/* SIDEBAR */
+.editor-sidebar {
+  background: #fff;
+  border-radius: 10px;
+  border: 1px solid #e1e1e1;
+  box-shadow: 0 4px 0 #d1d1d1;
+  padding: 18px 18px 20px;
+}
+.editor-sidebar h1 {
+  font-size: 22px;
+  margin-bottom: 8px;
+}
+.editor-sidebar p {
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+.control-block {
+  margin-top: 14px;
+}
+.control-block label {
+  display: block;
+  margin-bottom: 4px;
+}
+.control-block input[type="file"] {
+  width: 100%;
+}
+
+/* BUTTONS */
+.btn-try {
+  font-family: "Patrick Hand";
+  font-size: 16px;
+  padding: 8px 14px;
+  border: 2px solid #1A55D8;
+  border-radius: 6px;
+  background: #fff;
+  color: #1A55D8;
+  cursor: pointer;
+  transition: 180ms;
+}
+.btn-try:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.btn-try:not(:disabled):hover {
+  background: rgba(26,85,216,0.08);
+  transform: translateY(-2px);
+}
+.btn-try:active {
+  transform: scale(0.96);
+}
+
+/* STATUS / HINT */
+.status {
+  margin-top: 8px;
+  font-size: 13px;
+}
+.hint {
+  margin-top: 14px;
+  font-size: 13px;
+}
+
+/* TOOLBAR */
+.toolbar {
+  margin-top: 16px;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px dashed #c4c7d0;
+  background: #fafafa;
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1.2fr;
+  gap: 6px;
+  align-items: center;
+}
+.toolbar-label {
+  font-size: 12px;
+  color: #555;
+}
+#fontFamily,
+#fontSize,
+#fontColor {
+  width: 100%;
+  font-size: 13px;
+  padding: 3px 4px;
+}
+.toolbar-buttons {
+  grid-column: 1 / 4;
+  display: flex;
+  gap: 6px;
+  margin-top: 4px;
+}
+.toolbar-btn {
+  flex: 1;
+  font-size: 13px;
+  padding: 4px 0;
+  border-radius: 5px;
+  border: 1px solid #c4c7d0;
+  background: #fff;
+  cursor: pointer;
+}
+.toolbar-btn.active {
+  border-color: #1A55D8;
+  color: #1A55D8;
+}
+
+/* CANVAS AREA */
+.editor-canvas-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+/* Page container: holds canvas + absolute text boxes */
+.page-container {
+  position: relative;
+  background: #fff;
+  border: 1px solid #e1e1e1;
+  box-shadow: 0 8px 18px rgba(0,0,0,0.15);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+/* Canvas */
+#pdfCanvas {
+  display: block;
+}
+
+/* text boxes overlay */
+.text-box {
+  position: absolute;
+  border-radius: 4px;
+}
+
+/* inner editable area */
+.text-inner {
+  min-width: 40px;
+  min-height: 20px;
+  padding: 4px 6px;
+  font-family: "Patrick Hand";
+  font-size: 16px;
+  color: #222;
+  border: 1px dashed #1A55D8;
+  border-radius: 4px;
+  background: rgba(255,255,255,0.95);
+  cursor: text;
+  white-space: pre-wrap;
+}
+.text-box.active .text-inner {
+  box-shadow: 0 0 0 2px rgba(26,85,216,0.35);
+}
+
+/* drag handle */
+.drag-handle {
+  position: absolute;
+  right: -6px;
+  bottom: -6px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 1px solid #1A55D8;
+  background: #fff;
+  cursor: move;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  color: #1A55D8;
+}
+.drag-handle::before {
+  content: "⇲";
+  transform: translate(0, -1px);
+}
+
+/* contenteditable focus */
+.text-inner[contenteditable="true"]:focus {
+  outline: none;
+  border-style: solid;
+}

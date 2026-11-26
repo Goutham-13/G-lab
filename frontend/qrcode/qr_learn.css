@@ -1,0 +1,198 @@
+:root {
+  --bg-1: #070417;
+  --accent-1: #7b61ff;
+  --accent-2: #3ddcff;
+  --text: #eaf1ff;
+  --muted: rgba(255,255,255,0.78);
+  --muted-2: rgba(255,255,255,0.6);
+  --glass-border: rgba(255,255,255,0.06);
+  --shadow: rgba(0,0,0,0.45);
+  color-scheme: dark;
+}
+
+/* Base styles */
+body {
+  font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  margin: 0;
+  min-height: 100vh;
+  color: var(--text);
+  background:
+    radial-gradient(900px 500px at 10% 12%, rgba(123,97,255,0.06), transparent 8%),
+    radial-gradient(700px 350px at 88% 88%, rgba(61,220,255,0.06), transparent 8%),
+    var(--bg-1);
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
+/* Background Layers for subtle parallax/glow */
+.bg-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  z-index: 0;
+}
+.layer--deep {
+  background: radial-gradient(circle at 10% 20%, rgba(123,97,255,0.12), transparent 15%);
+  filter: blur(40px);
+}
+.layer--mid {
+  background: radial-gradient(circle at 80% 70%, rgba(61,220,255,0.1), transparent 12%);
+  filter: blur(28px);
+}
+.layer--front {
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.01));
+  mix-blend-mode: overlay;
+}
+
+/* Navbar */
+.navbar {
+  width: 100%;
+  height: 70px;
+  position: fixed;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0 2rem;
+  z-index: 50;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  backdrop-filter: blur(12px) saturate(130%);
+  border-bottom: 1px solid var(--glass-border);
+  box-shadow: 0 10px 30px var(--shadow);
+}
+
+.logo {
+  font-weight: 700;
+  font-size: 1.5rem;
+  background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-decoration: none;
+}
+
+/* Main Container */
+.learn-container {
+  position: relative;
+  z-index: 10;
+  padding: 120px 24px 80px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* Hero Section */
+.learn-hero {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+.learn-hero h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.learn-hero p {
+  font-size: 1.05rem;
+  color: var(--muted);
+  margin-top: 0.5rem;
+}
+
+/* Cards (glass effect) */
+.learn-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.8rem;
+}
+
+.card {
+  background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
+  border-radius: 16px;
+  border: 1px solid var(--glass-border);
+  padding: 2rem;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+}
+
+.card h2 {
+  color: var(--text);
+  margin-bottom: 0.8rem;
+  font-size: 1.3rem;
+}
+.card p, .card li {
+  color: var(--muted);
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+.card ol, .card ul {
+  margin: 0;
+  padding-left: 1.5rem;
+}
+
+/* Buttons */
+.button-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 2.5rem;
+}
+.btn-primary,
+.btn-secondary {
+  text-decoration: none;
+  padding: 0.9rem 2rem;
+  border-radius: 12px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+  text-align: center;
+}
+.btn-primary {
+  background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+  color: #fff;
+  box-shadow: 0 10px 30px rgba(123,97,255,0.12);
+}
+.btn-primary:hover {
+  transform: scale(1.05);
+  background: linear-gradient(90deg, var(--accent-2), var(--accent-1));
+}
+.btn-secondary {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  color: var(--muted);
+}
+.btn-secondary:hover {
+  background: rgba(255,255,255,0.1);
+  transform: scale(1.03);
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  padding: 1rem;
+  font-size: 0.9rem;
+  color: var(--muted-2);
+  margin-top: auto;
+}
+
+/* Responsive tweaks */
+@media (max-width: 720px) {
+  .learn-hero h1 {
+    font-size: 2rem;
+  }
+  .card {
+    padding: 1.5rem;
+  }
+  .learn-container {
+    padding: 100px 18px 60px;
+  }
+  .button-row {
+    width: 100%;
+    flex-direction: column;
+  }
+}

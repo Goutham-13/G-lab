@@ -1,0 +1,1095 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>CleanLab — QR, PDF, Background Remover, Compressor, Color Picker &amp; Link Tools</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none'%3E%3Crect x='2' y='2' width='20' height='20' rx='5' fill='%23ffffff' stroke='%230a0a0a' stroke-width='2'/%3E%3Crect x='6' y='6' width='5' height='5' fill='%230a0a0a'/%3E%3Crect x='13' y='6' width='5' height='5' fill='%230a0a0a'/%3E%3Crect x='6' y='13' width='5' height='5' fill='%230a0a0a'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- MINIMAL WHITE TOPBAR -->
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand-group" href="#home" id="brandHomeLink">
+        <span class="brand-mark" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <rect x="3" y="3" width="8" height="8" rx="1.5" stroke="#0a0a0a" stroke-width="2" />
+            <rect x="13" y="3" width="8" height="8" rx="1.5" fill="#0a0a0a" />
+            <rect x="3" y="13" width="8" height="8" rx="1.5" fill="#0a0a0a" />
+            <path d="M14 17h6M17 14v6" stroke="#0a0a0a" stroke-width="2" stroke-linecap="round" />
+          </svg>
+        </span>
+        <span class="brand-title">CleanLab</span>
+      </a>
+
+      <div id="homeSearchWrap" class="home-search-wrap">
+        <svg class="home-search-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <circle cx="11" cy="11" r="7" stroke="#666666" stroke-width="2" />
+          <path d="m20 20-3.5-3.5" stroke="#666666" stroke-width="2" stroke-linecap="round" />
+        </svg>
+        <input id="homeSearchInput" class="text-input home-search-input" type="search" placeholder="Search tools..." aria-label="Search tools" />
+      </div>
+
+      <button type="button" id="navBackHomeBtn" class="btn btn-secondary btn-sm" style="display:none;">← Back</button>
+    </div>
+  </header>
+
+  <main class="shell">
+
+    <!-- ================================================================
+         HOME: CLEAN FEATURE CARDS
+         ================================================================ -->
+    <section id="panel-home" class="panel active" aria-label="Home">
+      <div class="hero">
+        <h1>Simple tools in your browser.</h1>
+        <p class="hero-desc">
+          Create QR codes, split or merge PDFs, remove backgrounds, compress files, pick image colors, and preview or download from any link.
+        </p>
+      </div>
+
+      <div class="features-grid" id="homeFeaturesGrid">
+        <article class="feature-card" data-navigate="qr" data-keywords="qr code generator link wifi contact text email png svg image" tabindex="0" role="button" aria-label="Open QR Code Generator">
+          <div class="feature-icon" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+              <rect x="3" y="3" width="7" height="7" rx="1" stroke="#0a0a0a" stroke-width="1.8"/>
+              <rect x="14" y="3" width="7" height="7" rx="1" stroke="#0a0a0a" stroke-width="1.8"/>
+              <rect x="3" y="14" width="7" height="7" rx="1" stroke="#0a0a0a" stroke-width="1.8"/>
+              <rect x="14" y="14" width="3" height="3" fill="#0a0a0a"/>
+              <rect x="18" y="18" width="3" height="3" fill="#0a0a0a"/>
+              <rect x="14" y="18" width="3" height="3" fill="#0a0a0a"/>
+            </svg>
+          </div>
+          <h2>QR Code Generator</h2>
+          <p>Create QR codes for links, Wi-Fi, contacts, text, or email. Match the QR style to an uploaded image and download as PNG or SVG.</p>
+          <span class="feature-link">Open →</span>
+        </article>
+
+        <article class="feature-card" data-navigate="pdf" data-keywords="pdf splitter split extract pages zip" tabindex="0" role="button" aria-label="Open PDF Splitter">
+          <div class="feature-icon" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+              <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5Z" stroke="#0a0a0a" stroke-width="1.8" stroke-linejoin="round"/>
+              <path d="M14 3v5h5M8 13h8" stroke="#0a0a0a" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <h2>PDF Splitter</h2>
+          <p>Preview your PDF pages, click the ones you want to keep, and export as one combined PDF or individual files.</p>
+          <span class="feature-link">Open →</span>
+        </article>
+
+        <article class="feature-card" data-navigate="merge" data-keywords="pdf merger combine join multiple pdfs pages" tabindex="0" role="button" aria-label="Open PDF Merger">
+          <div class="feature-icon" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+              <rect x="3" y="4" width="11" height="14" rx="2" stroke="#0a0a0a" stroke-width="1.8"/>
+              <path d="M14 8h4a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2v-1" stroke="#0a0a0a" stroke-width="1.8" stroke-linecap="round"/>
+              <path d="M6.5 11h4M8.5 9v4" stroke="#0a0a0a" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <h2>PDF Merger</h2>
+          <p>Add as many PDFs as you need, preview and select the pages you want to include, and combine them into one PDF.</p>
+          <span class="feature-link">Open →</span>
+        </article>
+
+        <article class="feature-card" data-navigate="link" data-keywords="link downloader youtube twitter x instagram video audio image mp4 mp3" tabindex="0" role="button" aria-label="Open Link Downloader">
+          <div class="feature-icon" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+              <path d="M12 3v12m0 0-4-4m4 4 4-4" stroke="#0a0a0a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" stroke="#0a0a0a" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <h2>Link Downloader</h2>
+          <p>Paste a link from YouTube, Instagram, X, or any direct URL. Preview it cleanly and download video, audio, images, or files.</p>
+          <span class="feature-link">Open →</span>
+        </article>
+
+        <article class="feature-card" data-navigate="bg" data-keywords="background remover remove bg transparent png cutout erase image photo" tabindex="0" role="button" aria-label="Open Background Remover">
+          <div class="feature-icon" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+              <rect x="3" y="3" width="18" height="18" rx="3" stroke="#0a0a0a" stroke-width="1.8"/>
+              <path d="M9 3v18M15 3v18M3 9h18M3 15h18" stroke="#0a0a0a" stroke-width="1.1" opacity="0.25"/>
+              <circle cx="12" cy="9.5" r="2.8" fill="#0a0a0a"/>
+              <path d="M7.5 18a4.5 4.5 0 0 1 9 0" fill="#0a0a0a"/>
+            </svg>
+          </div>
+          <h2>Background Remover</h2>
+          <p>Remove image backgrounds and export transparent PNGs.</p>
+          <span class="feature-link">Open →</span>
+        </article>
+
+        <article class="feature-card" data-navigate="compress" data-keywords="compressor compress reduce file size shrink video mp4 pdf image jpg png audio zip optimize lossless" tabindex="0" role="button" aria-label="Open File Compressor">
+          <div class="feature-icon" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+              <path d="M12 3v6m0 0-3-3m3 3 3-3M12 21v-6m0 0-3 3m3-3 3 3" stroke="#0a0a0a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M4 12h16" stroke="#0a0a0a" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <h2>File Compressor</h2>
+          <p>Compress videos, PDFs, images, audio, and files without losing quality.</p>
+          <span class="feature-link">Open →</span>
+        </article>
+
+        <article class="feature-card" data-navigate="color" data-keywords="color picker palette eyedropper hex rgb hsl cmyk codes extract image photo" tabindex="0" role="button" aria-label="Open Color Picker">
+          <div class="feature-icon" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+              <path d="m14.5 5.5 4 4L9 19H5v-4l9.5-9.5Z" stroke="#0a0a0a" stroke-width="1.8" stroke-linejoin="round"/>
+              <path d="m12.5 7.5 4 4" stroke="#0a0a0a" stroke-width="1.8" stroke-linecap="round"/>
+              <circle cx="17.5" cy="17.5" r="2.5" fill="#0a0a0a"/>
+            </svg>
+          </div>
+          <h2>Color Picker</h2>
+          <p>Upload any image to extract exact color codes, view codes pinned on the image, and copy in one click.</p>
+          <span class="feature-link">Open →</span>
+        </article>
+      </div>
+
+      <p id="homeSearchEmpty" class="empty-state" style="display:none;margin-top:28px;">No matching tools found.</p>
+    </section>
+
+    <!-- ================================================================
+         TOOL 1: QR CODE GENERATOR
+         ================================================================ -->
+    <section id="panel-qr" class="panel" aria-label="QR Code Generator">
+      <div class="page-head">
+        <div class="title-with-help">
+          <h2>QR Code Generator</h2>
+          <div class="help-tip">
+            <button type="button" class="help-trigger" aria-label="QR Code Generator guide">?</button>
+            <div class="help-popover" role="tooltip">
+              <strong>QR Code Guide</strong>
+              <p>Pick a content tab, enter your details, and watch the live preview update automatically.</p>
+              <p>Upload an image under <em>Image Style</em> to blend your image across the entire QR code while keeping it scannable.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="studio-grid">
+        <!-- LEFT: CONTROLS -->
+        <div class="card">
+          <div class="seg-tabs" id="qrModeTabs" role="tablist" aria-label="Content Type">
+            <button type="button" class="seg-tab active" role="tab" aria-selected="true" data-qr-mode="url">Link</button>
+            <button type="button" class="seg-tab" role="tab" aria-selected="false" data-qr-mode="wifi">Wi-Fi</button>
+            <button type="button" class="seg-tab" role="tab" aria-selected="false" data-qr-mode="vcard">Contact</button>
+            <button type="button" class="seg-tab" role="tab" aria-selected="false" data-qr-mode="text">Text</button>
+            <button type="button" class="seg-tab" role="tab" aria-selected="false" data-qr-mode="email">Email</button>
+          </div>
+
+          <!-- Link -->
+          <div id="qr-mode-url" class="subpanel active">
+            <label class="field-label" for="qrUrlInput">Website Link</label>
+            <div class="input-row">
+              <input id="qrUrlInput" class="text-input" type="url" value="https://example.com" placeholder="https://example.com" />
+              <button type="button" id="qrHttpsBtn" class="btn btn-secondary btn-sm">https://</button>
+            </div>
+          </div>
+
+          <!-- Wi-Fi -->
+          <div id="qr-mode-wifi" class="subpanel">
+            <div class="two-col">
+              <div>
+                <label class="field-label" for="wifiSsid">Wi-Fi Name</label>
+                <input id="wifiSsid" class="text-input" type="text" placeholder="Network name" />
+              </div>
+              <div>
+                <label class="field-label" for="wifiPass">Password</label>
+                <input id="wifiPass" class="text-input" type="password" placeholder="Password" />
+              </div>
+            </div>
+            <div class="two-col" style="margin-top:14px;align-items:center;">
+              <div>
+                <label class="field-label" for="wifiSec">Security</label>
+                <select id="wifiSec" class="text-input">
+                  <option value="WPA" selected>WPA / WPA2</option>
+                  <option value="WEP">WEP</option>
+                  <option value="nopass">None</option>
+                </select>
+              </div>
+              <label class="check-label" style="margin-top:20px;">
+                <input type="checkbox" id="wifiHidden" />
+                <span>Hidden network</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Contact -->
+          <div id="qr-mode-vcard" class="subpanel">
+            <div class="two-col">
+              <div>
+                <label class="field-label" for="vcName">Full Name</label>
+                <input id="vcName" class="text-input" type="text" placeholder="Alex Morgan" />
+              </div>
+              <div>
+                <label class="field-label" for="vcOrg">Company</label>
+                <input id="vcOrg" class="text-input" type="text" placeholder="Optional" />
+              </div>
+              <div>
+                <label class="field-label" for="vcPhone">Phone</label>
+                <input id="vcPhone" class="text-input" type="tel" placeholder="+1 555 014 8820" />
+              </div>
+              <div>
+                <label class="field-label" for="vcEmail">Email</label>
+                <input id="vcEmail" class="text-input" type="email" placeholder="alex@example.com" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Text -->
+          <div id="qr-mode-text" class="subpanel">
+            <label class="field-label" for="qrTextArea">Text</label>
+            <textarea id="qrTextArea" class="text-input textarea" placeholder="Enter text or note..."></textarea>
+          </div>
+
+          <!-- Email -->
+          <div id="qr-mode-email" class="subpanel">
+            <div class="two-col">
+              <div>
+                <label class="field-label" for="emTo">To</label>
+                <input id="emTo" class="text-input" type="email" placeholder="hello@example.com" />
+              </div>
+              <div>
+                <label class="field-label" for="emSubject">Subject</label>
+                <input id="emSubject" class="text-input" type="text" placeholder="Subject" />
+              </div>
+            </div>
+            <div style="margin-top:14px;">
+              <label class="field-label" for="emBody">Message</label>
+              <textarea id="emBody" class="text-input textarea" style="min-height:72px;" placeholder="Optional message..."></textarea>
+            </div>
+          </div>
+
+          <hr class="divider" />
+
+          <!-- Size & Reliability -->
+          <div class="two-col">
+            <div>
+              <div class="field-label-row">
+                <label class="field-label" for="qrSizeSlider">Size</label>
+                <span id="qrSizeLabel" class="muted-val">512 px</span>
+              </div>
+              <input id="qrSizeSlider" class="range-slider" type="range" min="256" max="1024" step="128" value="512" />
+            </div>
+
+            <div>
+              <div class="field-label-row">
+                <label class="field-label" for="qrEcSelect">Scan Reliability</label>
+                <div class="help-tip">
+                  <button type="button" class="help-trigger sm" aria-label="Scan reliability help">?</button>
+                  <div class="help-popover" role="tooltip">
+                    <strong>Scan Reliability</strong>
+                    <p>Adds extra recovery data so the code still scans if smudged or styled with an image. Highest level is used automatically for custom images.</p>
+                  </div>
+                </div>
+              </div>
+              <select id="qrEcSelect" class="text-input">
+                <option value="L">Simple (7%)</option>
+                <option value="M" selected>Standard (15%)</option>
+                <option value="Q">High (25%)</option>
+                <option value="H">Best (30%)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Colors -->
+          <div class="control-block">
+            <label class="field-label">Colors</label>
+            <div class="swatch-row">
+              <button type="button" class="swatch-btn active" data-fg="#0a0a0a" data-bg="#ffffff" title="Black"><span style="background:#0a0a0a;"></span></button>
+              <button type="button" class="swatch-btn" data-fg="#1f2937" data-bg="#ffffff" title="Charcoal"><span style="background:#1f2937;"></span></button>
+              <button type="button" class="swatch-btn" data-fg="#1d4ed8" data-bg="#ffffff" title="Blue"><span style="background:#1d4ed8;"></span></button>
+              <button type="button" class="swatch-btn" data-fg="#0f766e" data-bg="#ffffff" title="Teal"><span style="background:#0f766e;"></span></button>
+              <button type="button" class="swatch-btn" data-fg="#9f1239" data-bg="#ffffff" title="Crimson"><span style="background:#9f1239;"></span></button>
+
+              <div class="color-pickers">
+                <label class="color-chip">
+                  <input type="color" id="qrFgColor" value="#0a0a0a" />
+                  <span>Code</span>
+                </label>
+                <label class="color-chip">
+                  <input type="color" id="qrBgColor" value="#ffffff" />
+                  <span>Background</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div id="qrContrastAlert" class="alert-box">
+            Low contrast — phones may struggle to scan these colors.
+          </div>
+
+          <div class="checks-row">
+            <label class="check-label">
+              <input type="checkbox" id="qrMarginCheck" checked />
+              <span>White border</span>
+            </label>
+            <label class="check-label">
+              <input type="checkbox" id="qrRoundCheck" />
+              <span>Rounded dots</span>
+            </label>
+          </div>
+
+          <hr class="divider" />
+
+          <!-- Image Style (Match QR to Uploaded Image) -->
+          <div class="control-block">
+            <div class="field-label-row">
+              <label class="field-label">Image Style (Optional)</label>
+              <div class="help-tip">
+                <button type="button" class="help-trigger sm" aria-label="Image style help">?</button>
+                <div class="help-popover" role="tooltip">
+                  <strong>Image-Aligned QR</strong>
+                  <p>Upload any image to reshape the QR pattern around it:</p>
+                  <p><strong>Full Image:</strong> Blends your photo across the entire QR code.<br/><strong>Color Mosaic:</strong> Colors the QR dots using your image.<br/><strong>Center Logo:</strong> Places a clean icon in the center.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="image-upload-row">
+              <input type="file" id="qrLogoFileInput" accept="image/*" hidden />
+              <button type="button" id="qrLogoUploadBtn" class="btn btn-secondary">Upload Image</button>
+              <div id="qrLogoPreviewChip" class="logo-chip" style="display:none;">
+                <img id="qrLogoThumb" alt="Uploaded QR image" />
+                <button type="button" id="qrLogoClearBtn" class="btn-link">Remove</button>
+              </div>
+            </div>
+
+            <div id="qrImageOptions" class="image-options" style="display:none;">
+              <div class="seg-tabs compact" id="qrImgModeTabs" role="tablist" aria-label="Image Mode">
+                <button type="button" class="seg-tab active" data-img-mode="blend">Full Image</button>
+                <button type="button" class="seg-tab" data-img-mode="mosaic">Color Mosaic</button>
+                <button type="button" class="seg-tab" data-img-mode="center">Center Logo</button>
+              </div>
+
+              <div id="qrBlendSliderWrap" style="margin-top:12px;">
+                <div class="field-label-row">
+                  <label class="field-label" for="qrBlendSlider">Image Visibility</label>
+                  <span id="qrBlendLabel" class="muted-val">80%</span>
+                </div>
+                <input id="qrBlendSlider" class="range-slider" type="range" min="40" max="100" step="5" value="80" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: LIVE PREVIEW & DOWNLOADS -->
+        <aside class="qr-pedestal">
+          <div class="card preview-card">
+            <div class="qr-canvas-wrap">
+              <div id="qrPreviewMount">
+                <canvas id="qrPreviewCanvas" width="512" height="512" aria-label="QR Code Preview"></canvas>
+              </div>
+              <div id="qrEmptyState" class="empty-state" style="display:none;">
+                Enter content on the left to preview.
+              </div>
+            </div>
+
+            <div id="qrPayloadPreview" class="payload-preview">
+              https://example.com
+            </div>
+
+            <div class="export-row">
+              <button type="button" id="qrDownloadPng" class="btn btn-primary">Download PNG</button>
+              <button type="button" id="qrDownloadSvg" class="btn btn-secondary">Download SVG</button>
+              <button type="button" id="qrCopyBtn" class="btn btn-secondary">Copy Image</button>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ================================================================
+         TOOL 2: PDF SPLITTER (PICK PAGES ONLY)
+         ================================================================ -->
+    <section id="panel-pdf" class="panel" aria-label="PDF Splitter">
+      <div class="page-head">
+        <div class="title-with-help">
+          <h2>PDF Splitter</h2>
+          <div class="help-tip">
+            <button type="button" class="help-trigger" aria-label="PDF Splitter guide">?</button>
+            <div class="help-popover" role="tooltip">
+              <strong>PDF Splitter Guide</strong>
+              <p>Upload any PDF to view its pages as thumbnails.</p>
+              <p>Click the pages you want to pick (or type ranges like <code>1-3, 5</code>), choose whether to save them combined or separately, and click <strong>Split PDF</strong>.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 1: DROPZONE -->
+      <div id="pdfDropzone" class="dropzone">
+        <input type="file" id="pdfFileInput" accept="application/pdf" hidden />
+        <p class="dropzone-title">Drop your PDF here, or choose a file</p>
+        <div class="dropzone-actions">
+          <button type="button" id="pdfBrowseBtn" class="btn btn-primary">Choose PDF File</button>
+          <button type="button" id="pdfSampleBtn" class="btn btn-secondary">Try Sample PDF</button>
+        </div>
+      </div>
+
+      <!-- FILE INFO -->
+      <div id="pdfFileBanner" class="file-banner">
+        <div class="file-meta">
+          <strong id="pdfFileName">document.pdf</strong>
+          <span id="pdfPageBadge" class="muted-val">0 pages</span>
+          <span id="pdfFileSize" class="muted-val">0 KB</span>
+        </div>
+        <button type="button" id="pdfReplaceBtn" class="btn btn-secondary btn-sm">Change File</button>
+      </div>
+
+      <!-- STEP 2: PICK PAGES WORKSPACE -->
+      <div id="pdfWorkspace" class="pdf-workspace">
+        <!-- LEFT: PAGE GRID -->
+        <div class="card">
+          <div class="field-label-row" style="margin-bottom:12px;">
+            <span class="field-label" style="margin:0;">Click pages to pick</span>
+            <span id="pdfThumbStatus" class="muted-val">Loading...</span>
+          </div>
+          <div id="pdfThumbGrid" class="thumb-grid"></div>
+        </div>
+
+        <!-- RIGHT: EXPORT SETTINGS -->
+        <div class="card">
+          <div class="control-block">
+            <div class="field-label-row">
+              <label class="field-label" for="pdfExprInput">Selected Pages</label>
+              <span class="muted-val">e.g. 1-3, 5</span>
+            </div>
+            <input id="pdfExprInput" class="text-input" type="text" placeholder="Click pages or type numbers..." />
+          </div>
+
+          <div class="control-block">
+            <label class="field-label">Save As</label>
+            <div class="radio-stack">
+              <label class="check-label">
+                <input type="radio" name="pdfPickOutput" value="single" checked />
+                <span>One combined PDF</span>
+              </label>
+              <label class="check-label">
+                <input type="radio" name="pdfPickOutput" value="individual" />
+                <span>One PDF per selected page</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="control-block">
+            <label class="field-label" for="pdfPrefixInput">File Name</label>
+            <input id="pdfPrefixInput" class="text-input" type="text" value="split" placeholder="document" />
+          </div>
+
+          <div class="control-block">
+            <label class="check-label">
+              <input type="checkbox" id="pdfZipCheck" checked />
+              <span>Save multiple files as ZIP</span>
+            </label>
+          </div>
+
+          <div id="pdfPlanSummary" class="summary-box">
+            Pick at least one page to split.
+          </div>
+
+          <div id="pdfErrorBox" class="alert-box"></div>
+
+          <button type="button" id="pdfSplitBtn" class="btn btn-primary" style="width:100%;">Split PDF</button>
+
+          <div id="pdfProgressStage" class="progress-wrap" style="display:none;">
+            <div class="progress-track">
+              <div id="pdfProgressFill" class="progress-fill"></div>
+            </div>
+            <p id="pdfProgressText" class="muted-val" style="margin:8px 0 0;">Preparing files...</p>
+          </div>
+
+          <div id="pdfResultsDeck" class="results-deck" style="display:none;">
+            <div class="field-label-row" style="margin-bottom:10px;">
+              <span class="field-label" style="margin:0;">Downloads</span>
+              <span id="pdfResultCount" class="muted-val">0 files</span>
+            </div>
+            <div id="pdfZipRow" style="margin-bottom:10px;">
+              <button type="button" id="pdfDownloadZipBtn" class="btn btn-primary" style="width:100%;">Download All (.zip)</button>
+            </div>
+            <div id="pdfResultsList" class="results-list"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================
+         TOOL 3: PDF MERGER (ADD MULTIPLE PDFS & PICK PAGES)
+         ================================================================ -->
+    <section id="panel-merge" class="panel" aria-label="PDF Merger">
+      <div class="page-head">
+        <div class="title-with-help">
+          <h2>PDF Merger</h2>
+          <div class="help-tip">
+            <button type="button" class="help-trigger" aria-label="PDF Merger guide">?</button>
+            <div class="help-popover" role="tooltip">
+              <strong>PDF Merger Guide</strong>
+              <p>Add as many PDF files as you need. Every page loads as a preview on the left.</p>
+              <p>Click pages to pick or skip them (or type ranges like <code>1-3, 5</code>), reorder files with ↑ / ↓, and click <strong>Merge PDF</strong> to save one combined file.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 1: DROPZONE -->
+      <div id="mergeDropzone" class="dropzone">
+        <input type="file" id="mergeFileInput" accept="application/pdf" multiple hidden />
+        <p class="dropzone-title">Drop PDF files here, or add files</p>
+        <div class="dropzone-actions">
+          <button type="button" id="mergeBrowseBtn" class="btn btn-primary">Add PDF Files</button>
+          <button type="button" id="mergeSampleBtn" class="btn btn-secondary">Try Sample PDFs</button>
+        </div>
+      </div>
+
+      <!-- TOP BAR ONCE FILES ARE ADDED -->
+      <div id="mergeFileBanner" class="file-banner">
+        <div class="file-meta">
+          <strong id="mergeBannerCount">0 PDFs added</strong>
+          <span id="mergeBannerPages" class="muted-val">0 total pages</span>
+        </div>
+        <button type="button" id="mergeAddMoreBtn" class="btn btn-secondary btn-sm">+ Add More PDFs</button>
+      </div>
+
+      <!-- STEP 2: PICK PAGES & MERGE WORKSPACE -->
+      <div id="mergeWorkspace" class="pdf-workspace">
+        <!-- LEFT: MULTI-PDF PAGE GRID -->
+        <div class="card">
+          <div class="field-label-row" style="margin-bottom:12px;">
+            <span class="field-label" style="margin:0;">Click pages to include</span>
+            <span id="mergeThumbStatus" class="muted-val">Ready</span>
+          </div>
+          <div id="mergeGroupsWrap" class="merge-groups-wrap"></div>
+        </div>
+
+        <!-- RIGHT: FILE ORDER & COMBINED EXPORT -->
+        <div class="card">
+          <div class="field-label-row" style="margin-bottom:10px;">
+            <span class="field-label" style="margin:0;">Files &amp; Page Ranges</span>
+            <span class="muted-val">e.g. 1-3, 5</span>
+          </div>
+          <div id="mergeFilesList" class="merge-files-list"></div>
+
+          <div class="control-block">
+            <label class="field-label" for="mergeOutputName">File Name</label>
+            <input id="mergeOutputName" class="text-input" type="text" value="merged" placeholder="merged" />
+          </div>
+
+          <div id="mergePlanSummary" class="summary-box">
+            Add at least one PDF file to merge.
+          </div>
+
+          <div id="mergeErrorBox" class="alert-box"></div>
+
+          <button type="button" id="mergeRunBtn" class="btn btn-primary" style="width:100%;">Merge PDF</button>
+
+          <div id="mergeProgressStage" class="progress-wrap" style="display:none;">
+            <div class="progress-track">
+              <div id="mergeProgressFill" class="progress-fill"></div>
+            </div>
+            <p id="mergeProgressText" class="muted-val" style="margin:8px 0 0;">Preparing pages...</p>
+          </div>
+
+          <div id="mergeResultsDeck" class="results-deck" style="display:none;">
+            <div class="field-label-row" style="margin-bottom:10px;">
+              <span class="field-label" style="margin:0;">Download</span>
+              <span id="mergeResultMeta" class="muted-val"></span>
+            </div>
+            <button type="button" id="mergeDownloadBtn" class="btn btn-primary" style="width:100%;">Download Merged PDF</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================
+         TOOL 4: LINK DOWNLOADER
+         ================================================================ -->
+    <section id="panel-link" class="panel" aria-label="Link Downloader">
+      <div class="page-head">
+        <div class="title-with-help">
+          <h2>Link Downloader</h2>
+          <div class="help-tip">
+            <button type="button" class="help-trigger" aria-label="Link Downloader guide">?</button>
+            <div class="help-popover" role="tooltip">
+              <strong>Link Downloader Guide</strong>
+              <p>Paste any URL (YouTube, Instagram, X/Twitter, TikTok, or a direct video, audio, image, or PDF link) and click <strong>Fetch</strong>.</p>
+              <p>Preview the content right on screen, then pick a format to download.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card link-search-card">
+        <label class="field-label" for="linkUrlInput">Paste any link</label>
+        <form id="linkFetchForm" class="input-row">
+          <input id="linkUrlInput" class="text-input" type="url" placeholder="https://www.youtube.com/watch?v=... or any media/file URL" required />
+          <button type="submit" id="linkFetchBtn" class="btn btn-primary">Fetch</button>
+        </form>
+
+        <div id="linkProgressWrap" class="progress-wrap" style="display:none;">
+          <div class="progress-track">
+            <div id="linkProgressFill" class="progress-fill"></div>
+          </div>
+          <p id="linkProgressText" class="muted-val" style="margin:8px 0 0;">Fetching link...</p>
+        </div>
+
+        <div id="linkErrorBox" class="alert-box"></div>
+      </div>
+
+      <div id="linkResultWrap" class="studio-grid" style="display:none;margin-top:20px;">
+        <!-- LEFT: PREVIEW STAGE -->
+        <div class="card">
+          <div class="field-label-row" style="margin-bottom:12px;">
+            <span class="field-label" style="margin:0;">Preview</span>
+            <span id="linkKindMeta" class="muted-val"></span>
+          </div>
+          <div id="linkPreviewTabs" class="seg-tabs compact" style="display:none;margin-bottom:12px;" role="tablist" aria-label="Preview mode"></div>
+          <div id="linkPreviewBox" class="link-preview-box"></div>
+        </div>
+
+        <!-- RIGHT: DETAILS & DOWNLOAD FORMATS -->
+        <div class="card">
+          <div id="linkPlatformLine" class="muted-val" style="margin-bottom:4px;"></div>
+          <h3 id="linkTitle" class="link-result-title"></h3>
+          <p id="linkSubLine" class="muted-val" style="margin:4px 0 16px;"></p>
+
+          <hr class="divider" style="margin:16px 0;" />
+
+          <label class="field-label">Choose Format</label>
+          <div id="linkFilterTabs" class="seg-tabs compact" style="display:none;margin-bottom:12px;" role="tablist" aria-label="Filter formats"></div>
+          <div id="linkOptionsList" class="results-list"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================
+         TOOL 5: BACKGROUND REMOVER
+         ================================================================ -->
+    <section id="panel-bg" class="panel" aria-label="Background Remover">
+      <div class="page-head">
+        <div class="title-with-help">
+          <h2>Background Remover</h2>
+          <div class="help-tip">
+            <button type="button" class="help-trigger" aria-label="Background Remover guide">?</button>
+            <div class="help-popover" role="tooltip">
+              <strong>Background Remover Guide</strong>
+              <p>Upload or paste any JPG, PNG, or WebP photo. High-precision subject detection removes the background automatically at full resolution.</p>
+              <p>Use <strong>Cutout</strong>, <strong>Compare</strong>, or backdrop swatches to check hair and edges, then export your transparent PNG.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 1: DROPZONE -->
+      <div id="bgDropzone" class="dropzone">
+        <input type="file" id="bgFileInput" accept="image/*" hidden />
+        <p class="dropzone-title">Drop your image here, or choose a photo</p>
+        <div class="dropzone-actions">
+          <button type="button" id="bgBrowseBtn" class="btn btn-primary">Choose Image</button>
+          <button type="button" id="bgSampleBtn" class="btn btn-secondary">Try Sample Photo</button>
+        </div>
+      </div>
+
+      <!-- FILE INFO -->
+      <div id="bgFileBanner" class="file-banner">
+        <div class="file-meta">
+          <strong id="bgFileName">photo.png</strong>
+          <span id="bgDimBadge" class="muted-val">0 × 0</span>
+          <span id="bgSizeBadge" class="muted-val">0 KB</span>
+        </div>
+        <button type="button" id="bgReplaceBtn" class="btn btn-secondary btn-sm">Change Image</button>
+      </div>
+
+      <!-- STEP 2: STUDIO WORKSPACE -->
+      <div id="bgWorkspace" class="pdf-workspace">
+        <!-- LEFT: PREVIEW STAGE -->
+        <div class="card">
+          <div class="field-label-row" style="margin-bottom:12px;">
+            <span class="field-label" style="margin:0;">Preview</span>
+            <span id="bgResultMeta" class="muted-val">Waiting...</span>
+          </div>
+
+          <div id="bgPreviewTabs" class="seg-tabs compact" style="margin-bottom:12px;" role="tablist" aria-label="Preview view">
+            <button type="button" class="seg-tab active" data-bg-view="cutout">Cutout</button>
+            <button type="button" class="seg-tab" data-bg-view="compare">Compare</button>
+            <button type="button" class="seg-tab" data-bg-view="original">Original</button>
+          </div>
+
+          <div id="bgPreviewStage" class="bg-preview-stage bg-checker">
+            <img id="bgCutoutImg" class="bg-stage-img" alt="Transparent cutout preview" />
+            <div id="bgCompareWrap" class="bg-compare-wrap" style="display:none;">
+              <img id="bgCompareCutoutImg" class="bg-compare-img" alt="Cutout comparison" />
+              <div id="bgCompareOverlay" class="bg-compare-overlay">
+                <img id="bgCompareOrigImg" class="bg-compare-img" alt="Original comparison" />
+              </div>
+              <div id="bgCompareLine" class="bg-compare-line" aria-hidden="true">
+                <span class="bg-compare-handle">↔</span>
+              </div>
+              <input id="bgCompareSlider" class="bg-compare-range" type="range" min="0" max="100" value="50" aria-label="Compare original and cutout" />
+            </div>
+            <img id="bgOriginalImg" class="bg-stage-img" style="display:none;" alt="Original photo preview" />
+          </div>
+
+          <div class="bg-backdrop-bar">
+            <span class="muted-val">Backdrop</span>
+            <div class="bg-swatch-row" role="group" aria-label="Preview backdrop">
+              <button type="button" class="bg-swatch active bg-swatch-checker" data-backdrop="checker" title="Transparent checkerboard" aria-label="Transparent checkerboard"></button>
+              <button type="button" class="bg-swatch" data-backdrop="#ffffff" style="background:#ffffff;" title="White" aria-label="White backdrop"></button>
+              <button type="button" class="bg-swatch" data-backdrop="#0a0a0a" style="background:#0a0a0a;" title="Black" aria-label="Black backdrop"></button>
+              <button type="button" class="bg-swatch" data-backdrop="#e5e7eb" style="background:#e5e7eb;" title="Light gray" aria-label="Gray backdrop"></button>
+              <label class="bg-swatch-picker" title="Custom backdrop color">
+                <input id="bgBackdropColor" type="color" value="#f3f4f6" aria-label="Custom backdrop color" />
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: QUALITY SETTINGS & EXPORT -->
+        <div class="card">
+          <div class="control-block" style="margin-top:0;">
+            <label class="field-label">Detection Mode</label>
+            <div id="bgModeTabs" class="seg-tabs compact" role="tablist" aria-label="Detection mode">
+              <button type="button" class="seg-tab active" data-bg-mode="high">High Detail</button>
+              <button type="button" class="seg-tab" data-bg-mode="portrait">Portrait</button>
+              <button type="button" class="seg-tab" data-bg-mode="fast">Fast</button>
+            </div>
+          </div>
+
+          <div class="control-block">
+            <label class="check-label">
+              <input type="checkbox" id="bgRefineCheck" checked />
+              <span>Refine fine edges &amp; hair</span>
+            </label>
+          </div>
+
+          <div class="control-block">
+            <label class="field-label">Export Background</label>
+            <div class="radio-stack">
+              <label class="check-label">
+                <input type="radio" name="bgExportFill" value="transparent" checked />
+                <span>Transparent PNG</span>
+              </label>
+              <label class="check-label">
+                <input type="radio" name="bgExportFill" value="solid" />
+                <span>Solid Color PNG</span>
+              </label>
+            </div>
+            <div id="bgExportColorRow" class="color-row" style="display:none;margin-top:10px;">
+              <input id="bgExportColor" type="color" value="#ffffff" aria-label="Export fill color" />
+              <span id="bgExportColorHex" class="muted-val">#ffffff</span>
+            </div>
+          </div>
+
+          <div class="control-block">
+            <label class="field-label" for="bgOutputName">File Name</label>
+            <input id="bgOutputName" class="text-input" type="text" value="cutout" placeholder="image-nobg" />
+          </div>
+
+          <div id="bgErrorBox" class="alert-box"></div>
+
+          <button type="button" id="bgProcessBtn" class="btn btn-secondary" style="width:100%;">Re-process Cutout</button>
+
+          <div id="bgProgressStage" class="progress-wrap" style="display:none;">
+            <div class="progress-track">
+              <div id="bgProgressFill" class="progress-fill"></div>
+            </div>
+            <p id="bgProgressText" class="muted-val" style="margin:8px 0 0;">Preparing photo...</p>
+          </div>
+
+          <div id="bgResultsDeck" class="results-deck" style="display:none;">
+            <div class="field-label-row" style="margin-bottom:10px;">
+              <span class="field-label" style="margin:0;">Export</span>
+              <span id="bgExportSize" class="muted-val">PNG</span>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <button type="button" id="bgDownloadBtn" class="btn btn-primary" style="width:100%;">Download Transparent PNG</button>
+              <button type="button" id="bgCopyBtn" class="btn btn-secondary" style="width:100%;">Copy PNG to Clipboard</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================
+         TOOL 6: FILE COMPRESSOR (VIDEO, PDF, IMAGE, AUDIO, ANY FILE)
+         ================================================================ -->
+    <section id="panel-compress" class="panel" aria-label="File Compressor">
+      <div class="page-head">
+        <div class="title-with-help">
+          <h2>File Compressor</h2>
+          <div class="help-tip">
+            <button type="button" class="help-trigger" aria-label="File Compressor guide">?</button>
+            <div class="help-popover" role="tooltip">
+              <strong>File Compressor Guide</strong>
+              <p>Upload any video, PDF, image, audio track, or general document.</p>
+              <p>Choose <strong>Lossless / Max</strong> or <strong>Balanced</strong> to shrink file size without visible quality loss, verify the preview, and download immediately.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 1: DROPZONE -->
+      <div id="compDropzone" class="dropzone">
+        <input type="file" id="compFileInput" hidden />
+        <p class="dropzone-title">Drop any file here — video, PDF, image, audio, or document</p>
+        <div class="dropzone-actions">
+          <button type="button" id="compBrowseBtn" class="btn btn-primary">Choose File</button>
+          <button type="button" id="compSampleBtn" class="btn btn-secondary">Try Sample File</button>
+        </div>
+      </div>
+
+      <!-- FILE INFO BANNER -->
+      <div id="compFileBanner" class="file-banner">
+        <div class="file-meta">
+          <strong id="compFileName">file</strong>
+          <span id="compTypeBadge" class="muted-val">File</span>
+          <span id="compOrigBadge" class="muted-val">0 KB</span>
+        </div>
+        <button type="button" id="compReplaceBtn" class="btn btn-secondary btn-sm">Change File</button>
+      </div>
+
+      <!-- STEP 2: COMPRESSOR WORKSPACE -->
+      <div id="compWorkspace" class="pdf-workspace">
+        <!-- LEFT: OUTPUT PREVIEW & SIZE STATS -->
+        <div class="card">
+          <div class="field-label-row" style="margin-bottom:12px;">
+            <span class="field-label" style="margin:0;">Preview &amp; Savings</span>
+            <span id="compNoteMeta" class="muted-val">Ready</span>
+          </div>
+
+          <div id="compPreviewBox" class="link-preview-box"></div>
+
+          <div id="compStatsGrid" class="comp-stats-grid" style="display:none;">
+            <div class="comp-stat-card">
+              <span class="muted-val">Original</span>
+              <strong id="compStatOrig">—</strong>
+            </div>
+            <div class="comp-stat-card">
+              <span class="muted-val">Compressed</span>
+              <strong id="compStatNew">—</strong>
+            </div>
+            <div class="comp-stat-card">
+              <span class="muted-val">Saved</span>
+              <strong id="compStatSaved">—</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: QUALITY PRESET & DOWNLOAD -->
+        <div class="card">
+          <div class="control-block" style="margin-top:0;">
+            <label class="field-label">Compression Quality</label>
+            <div id="compPresetTabs" class="seg-tabs compact" role="tablist" aria-label="Compression quality">
+              <button type="button" class="seg-tab" data-comp-level="lossless">Lossless / Max</button>
+              <button type="button" class="seg-tab active" data-comp-level="balanced">Balanced</button>
+              <button type="button" class="seg-tab" data-comp-level="compact">Small</button>
+            </div>
+          </div>
+
+          <div id="compImgFmtBlock" class="control-block" style="display:none;">
+            <label class="field-label">Image Format</label>
+            <div class="radio-stack">
+              <label class="check-label">
+                <input type="radio" name="compImgFmt" value="auto" checked />
+                <span>Keep original format</span>
+              </label>
+              <label class="check-label">
+                <input type="radio" name="compImgFmt" value="webp" />
+                <span>WebP (smallest visually lossless size)</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="control-block">
+            <label class="field-label" for="compOutputName">File Name</label>
+            <input id="compOutputName" class="text-input" type="text" value="compressed" placeholder="file-compressed" />
+          </div>
+
+          <div id="compErrorBox" class="alert-box"></div>
+
+          <button type="button" id="compRunBtn" class="btn btn-secondary" style="width:100%;">Re-compress File</button>
+
+          <div id="compProgressStage" class="progress-wrap" style="display:none;">
+            <div class="progress-track">
+              <div id="compProgressFill" class="progress-fill"></div>
+            </div>
+            <p id="compProgressText" class="muted-val" style="margin:8px 0 0;">Analyzing file...</p>
+          </div>
+
+          <div id="compResultsDeck" class="results-deck" style="display:none;">
+            <div class="field-label-row" style="margin-bottom:10px;">
+              <span class="field-label" style="margin:0;">Export</span>
+              <span id="compExportMeta" class="muted-val">Ready</span>
+            </div>
+            <button type="button" id="compDownloadBtn" class="btn btn-primary" style="width:100%;">Download Compressed File</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================
+         TOOL 7: COLOR PICKER (PALETTE DETECTOR + ON-IMAGE PINS + EYEDROPPER)
+         ================================================================ -->
+    <section id="panel-color" class="panel" aria-label="Color Picker">
+      <div class="page-head">
+        <div class="title-with-help">
+          <h2>Color Picker</h2>
+          <div class="help-tip">
+            <button type="button" class="help-trigger" aria-label="Color Picker guide">?</button>
+            <div class="help-popover" role="tooltip">
+              <strong>Color Picker Guide</strong>
+              <p>Upload, drag-and-drop, or paste any image to extract its dominant colors with codes pinned right over the preview.</p>
+              <p>Hover to inspect pixels with the loupe, click anywhere on the image to pick an exact pixel color, and click <strong>Copy</strong> on any HEX, RGB, HSL, or CMYK code.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 1: DROPZONE -->
+      <div id="colorDropzone" class="dropzone">
+        <input type="file" id="colorFileInput" accept="image/*" hidden />
+        <p class="dropzone-title">Drop any image here, or choose a photo</p>
+        <div class="dropzone-actions">
+          <button type="button" id="colorBrowseBtn" class="btn btn-primary">Choose Image</button>
+          <button type="button" id="colorSampleBtn" class="btn btn-secondary">Try Sample Image</button>
+        </div>
+      </div>
+
+      <!-- FILE BANNER -->
+      <div id="colorFileBanner" class="file-banner">
+        <div class="file-meta">
+          <strong id="colorFileName">photo.png</strong>
+          <span id="colorDimBadge" class="muted-val">0 × 0</span>
+        </div>
+        <button type="button" id="colorReplaceBtn" class="btn btn-secondary btn-sm">Change Image</button>
+      </div>
+
+      <!-- STEP 2: INTERACTIVE WORKSPACE -->
+      <div id="colorWorkspace" class="pdf-workspace">
+        <!-- LEFT: INTERACTIVE IMAGE PREVIEW WITH PINNED CODES & LOUPE -->
+        <div class="card">
+          <div class="field-label-row" style="margin-bottom:10px;">
+            <span class="field-label" style="margin:0;">Preview</span>
+            <span id="colorHoverMeta" class="muted-val">Click image to pick a pixel color</span>
+          </div>
+
+          <div class="color-preview-toolbar">
+            <div id="colorFmtTabs" class="seg-tabs compact" role="tablist" aria-label="Color format">
+              <button type="button" class="seg-tab active" data-fmt="hex">HEX</button>
+              <button type="button" class="seg-tab" data-fmt="rgb">RGB</button>
+              <button type="button" class="seg-tab" data-fmt="hsl">HSL</button>
+              <button type="button" class="seg-tab" data-fmt="cmyk">CMYK</button>
+            </div>
+            <label class="check-label color-pins-toggle">
+              <input type="checkbox" id="colorShowPinsCheck" checked />
+              <span>Show codes on image</span>
+            </label>
+          </div>
+
+          <div class="color-stage-wrap">
+            <div id="colorImageFrame" class="color-image-frame">
+              <canvas id="colorImageCanvas" aria-label="Interactive color picker canvas"></canvas>
+              <div id="colorPinsLayer" class="color-pins-layer" aria-label="Detected color pins"></div>
+              <div id="colorLoupe" class="color-loupe" style="display:none;" aria-hidden="true">
+                <canvas id="colorLoupeCanvas" width="90" height="90"></canvas>
+                <span id="colorLoupeCode" class="color-loupe-code">#000000</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: SELECTED COLOR INSPECTOR & EXTRACTED PALETTE -->
+        <div class="card">
+          <div class="field-label-row" style="margin-bottom:10px;">
+            <span class="field-label" style="margin:0;">Selected Color</span>
+            <span id="colorSelectedRole" class="muted-val">Dominant</span>
+          </div>
+
+          <div class="color-hero-card">
+            <div class="color-hero-head">
+              <div id="colorActiveSwatch" class="color-hero-swatch"></div>
+              <div class="color-hero-meta">
+                <strong id="colorActiveMainCode">#000000</strong>
+                <span id="colorActiveSub" class="muted-val">Click Copy below or pick on image</span>
+              </div>
+            </div>
+
+            <div class="color-code-grid" id="colorInspectorRows">
+              <div class="color-code-row">
+                <span class="color-code-key">HEX</span>
+                <code id="colorCodeHex" class="color-code-val">#000000</code>
+                <button type="button" class="btn btn-secondary btn-sm color-copy-btn" data-copy-fmt="hex">Copy</button>
+              </div>
+              <div class="color-code-row">
+                <span class="color-code-key">RGB</span>
+                <code id="colorCodeRgb" class="color-code-val">rgb(0, 0, 0)</code>
+                <button type="button" class="btn btn-secondary btn-sm color-copy-btn" data-copy-fmt="rgb">Copy</button>
+              </div>
+              <div class="color-code-row">
+                <span class="color-code-key">HSL</span>
+                <code id="colorCodeHsl" class="color-code-val">hsl(0, 0%, 0%)</code>
+                <button type="button" class="btn btn-secondary btn-sm color-copy-btn" data-copy-fmt="hsl">Copy</button>
+              </div>
+              <div class="color-code-row">
+                <span class="color-code-key">CMYK</span>
+                <code id="colorCodeCmyk" class="color-code-val">cmyk(0%, 0%, 0%, 100%)</code>
+                <button type="button" class="btn btn-secondary btn-sm color-copy-btn" data-copy-fmt="cmyk">Copy</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="control-block">
+            <div class="field-label-row">
+              <label class="field-label" for="colorCountRange">Detected Colors</label>
+              <span id="colorCountVal" class="muted-val">6 colors</span>
+            </div>
+            <input id="colorCountRange" class="range-slider" type="range" min="4" max="10" step="1" value="6" />
+          </div>
+
+          <div id="colorPaletteList" class="color-palette-list"></div>
+
+          <div class="results-deck color-actions-deck">
+            <div class="color-actions-row">
+              <button type="button" id="colorCopyAllBtn" class="btn btn-primary btn-sm" style="width:100%;">Copy All Codes</button>
+              <button type="button" id="colorDownloadBtn" class="btn btn-secondary btn-sm" style="width:100%;">Download Palette PNG</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- PAGE ZOOM MODAL FOR PDF THUMBNAILS -->
+  <div id="pdfZoomModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-label="Page Preview">
+    <div class="modal-card">
+      <div class="modal-head">
+        <strong id="pdfZoomTitle">Page 1</strong>
+        <button type="button" id="pdfZoomCloseBtn" class="btn btn-secondary btn-sm">Close</button>
+      </div>
+      <div class="modal-canvas-wrap">
+        <canvas id="pdfZoomCanvas"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- MINIMAL TOAST -->
+  <div id="globalToast" class="toast" role="status" aria-live="polite"></div>
+
+  <!-- Client Libraries -->
+  <script src="vendor/qrcode.min.js"></script>
+  <script src="vendor/pdf-lib.min.js"></script>
+  <script src="vendor/jszip.min.js"></script>
+  <script src="vendor/pdf.min.js"></script>
+
+  <!-- App Modules -->
+  <script src="app.js"></script>
+  <script src="qr-studio.js"></script>
+  <script src="pdf-studio.js"></script>
+  <script src="merge-studio.js"></script>
+  <script src="link-studio.js"></script>
+  <script src="bg-studio.js"></script>
+  <script src="compress-studio.js"></script>
+  <script src="color-studio.js"></script>
+</body>
+</html>
