@@ -1,8 +1,6 @@
-# Exclude backend — Python deps cause bundle size to exceed 500 MB
+# Exclude backend from Vercel static bundle
 backend/
-Procfile
 render.yaml
-requirements.txt
 *.py
 __pycache__/
 *.pyc
