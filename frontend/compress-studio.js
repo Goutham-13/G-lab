@@ -5,10 +5,53 @@
 (() => {
   'use strict';
 
-  // Resolve backend API base URL (set via api-config.js or auto-detect)
-  function getApiBase() {
+  // Resolve backend API base URL (smart local + Render fallback)
+  async function resolveApiBase() {
+    if (typeof window.resolveCleanLabApiBase === 'function') {
+      return window.resolveCleanLabApiBase();
+    }
     if (window.CLEANLAB_API_BASE) return String(window.CLEANLAB_API_BASE).replace(/\/$/, '');
-    return '';  // relative path — works when served from same origin as backend
+    return '';
+  }
+
+  function compressImageClientSide(blob, level, targetFmt) {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      const url = URL.createObjectURL(blob);
+      img.onload = () => {
+        URL.revokeObjectURL(url);
+        const canvas = document.createElement('canvas');
+        canvas.width = img.naturalWidth || img.width;
+        canvas.height = img.naturalHeight || img.height;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return reject(new Error('Canvas unavailable'));
+        ctx.drawImage(img, 0, 0);
+
+        const qMap = { high: 0.9, balanced: 0.78, maximum: 0.62 };
+        const q = qMap[level] || 0.78;
+        let mime = 'image/webp';
+        let ext = '.webp';
+        if (targetFmt === 'jpeg' || targetFmt === 'jpg') {
+          mime = 'image/jpeg';
+          ext = '.jpg';
+        } else if (targetFmt === 'png') {
+          mime = 'image/png';
+          ext = '.png';
+        } else if (targetFmt === 'original') {
+          if (blob.type === 'image/png') { mime = 'image/png'; ext = '.png'; }
+          else if (blob.type === 'image/jpeg') { mime = 'image/jpeg'; ext = '.jpg'; }
+        }
+        canvas.toBlob((out) => {
+          if (!out) return reject(new Error('Browser compression failed'));
+          resolve({ blob: out, ext, note: `Browser compressed (${ext.replace('.', '').toUpperCase()})` });
+        }, mime, q);
+      };
+      img.onerror = () => {
+        URL.revokeObjectURL(url);
+        reject(new Error('Could not decode image in browser'));
+      };
+      img.src = url;
+    });
   }
 
   const PROGRESS_STEPS = [
@@ -233,22 +276,42 @@
       form.append('level', state.level);
       form.append('image_format', state.imageFormat);
 
-      const res = await fetch(`${getApiBase()}/api/compress`, { method: 'POST', body: form });
-      if (!res.ok) {
-        let errMsg = `Compression failed (${res.status})`;
-        try {
-          const j = await res.json();
-          if (j?.error) errMsg = j.error;
-        } catch {}
-        throw new Error(errMsg);
-      }
+      const apiBase = await resolveApiBase();
+      let outBlob;
+      let origSize = state.sourceBlob.size;
+      let compSize;
+      let outExt;
+      let note;
+      let kind = state.sourceKind;
 
-      const outBlob = await res.blob();
-      const origSize = Number(res.headers.get('X-Original-Size') || state.sourceBlob.size);
-      const compSize = Number(res.headers.get('X-Compressed-Size') || outBlob.size);
-      const outExt = res.headers.get('X-Output-Ext') || '';
-      const note = res.headers.get('X-Compress-Note') || 'Compressed';
-      const kind = res.headers.get('X-Compress-Kind') || state.sourceKind;
+      if (apiBase === null) {
+        if (state.sourceKind === 'image') {
+          const clientOut = await compressImageClientSide(state.sourceBlob, state.level, state.imageFormat);
+          outBlob = clientOut.blob;
+          compSize = outBlob.size;
+          outExt = clientOut.ext;
+          note = clientOut.note;
+        } else {
+          throw new Error('Failed to fetch');
+        }
+      } else {
+        const res = await fetch(`${apiBase}/api/compress`, { method: 'POST', body: form });
+        if (!res.ok) {
+          let errMsg = `Compression failed (${res.status})`;
+          try {
+            const j = await res.json();
+            if (j?.error) errMsg = j.error;
+          } catch {}
+          throw new Error(errMsg);
+        }
+
+        outBlob = await res.blob();
+        origSize = Number(res.headers.get('X-Original-Size') || state.sourceBlob.size);
+        compSize = Number(res.headers.get('X-Compressed-Size') || outBlob.size);
+        outExt = res.headers.get('X-Output-Ext') || '';
+        note = res.headers.get('X-Compress-Note') || 'Compressed';
+        kind = res.headers.get('X-Compress-Kind') || state.sourceKind;
+      }
 
       if (state.resultUrl) URL.revokeObjectURL(state.resultUrl);
       state.resultBlob = outBlob;

@@ -37,6 +37,9 @@
   }
 
   async function resolveApiBase() {
+    if (typeof window.resolveCleanLabApiBase === 'function') {
+      return window.resolveCleanLabApiBase();
+    }
     const primary = getConfiguredApiBase();
     try {
       const r = await fetch(`${primary}/api/health`);

@@ -5,10 +5,13 @@
 (() => {
   'use strict';
 
-  // Resolve backend API base URL (set via api-config.js or auto-detect)
-  function getApiBase() {
+  // Resolve backend API base URL (smart local + Render fallback)
+  async function resolveApiBase() {
+    if (typeof window.resolveCleanLabApiBase === 'function') {
+      return window.resolveCleanLabApiBase();
+    }
     if (window.CLEANLAB_API_BASE) return String(window.CLEANLAB_API_BASE).replace(/\/$/, '');
-    return '';  // relative path — works when served from same origin as backend
+    return '';
   }
 
   const PROGRESS_STEPS = [
@@ -253,7 +256,11 @@
       const fillMode = bgExportFillRadios.find((r) => r.checked)?.value || 'transparent';
       form.append('bg_color', fillMode === 'solid' ? (bgExportColor?.value || '#ffffff') : 'transparent');
 
-      const res = await fetch(`${getApiBase()}/api/remove-bg`, { method: 'POST', body: form });
+      const apiBase = await resolveApiBase();
+      if (apiBase === null) {
+        throw new Error('Failed to fetch');
+      }
+      const res = await fetch(`${apiBase}/api/remove-bg`, { method: 'POST', body: form });
       if (!res.ok) {
         let errMsg = `Server error (${res.status})`;
         try {
