@@ -1,9 +1,8 @@
 # Exclude entire backend — Python deps cause bundle size to exceed 500 MB
 backend/
 Procfile
+render.yaml
 *.py
-requirements.txt
-*.txt
 __pycache__/
 *.pyc
 *.pyo

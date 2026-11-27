@@ -5,6 +5,12 @@
 (() => {
   'use strict';
 
+  // Resolve backend API base URL (set via api-config.js or auto-detect)
+  function getApiBase() {
+    if (window.CLEANLAB_API_BASE) return String(window.CLEANLAB_API_BASE).replace(/\/$/, '');
+    return '';  // relative path — works when served from same origin as backend
+  }
+
   const PROGRESS_STEPS = [
     [16, 'Inspecting file format & structure...'],
     [38, 'Preserving visual & stream fidelity...'],
@@ -227,7 +233,7 @@
       form.append('level', state.level);
       form.append('image_format', state.imageFormat);
 
-      const res = await fetch('/api/compress', { method: 'POST', body: form });
+      const res = await fetch(`${getApiBase()}/api/compress`, { method: 'POST', body: form });
       if (!res.ok) {
         let errMsg = `Compression failed (${res.status})`;
         try {

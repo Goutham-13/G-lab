@@ -5,6 +5,12 @@
 (() => {
   'use strict';
 
+  // Resolve backend API base URL (set via api-config.js or auto-detect)
+  function getApiBase() {
+    if (window.CLEANLAB_API_BASE) return String(window.CLEANLAB_API_BASE).replace(/\/$/, '');
+    return '';  // relative path — works when served from same origin as backend
+  }
+
   const PROGRESS_STEPS = [
     [14, 'Preparing photo at full resolution...'],
     [34, 'Detecting main subject...'],
@@ -247,7 +253,7 @@
       const fillMode = bgExportFillRadios.find((r) => r.checked)?.value || 'transparent';
       form.append('bg_color', fillMode === 'solid' ? (bgExportColor?.value || '#ffffff') : 'transparent');
 
-      const res = await fetch('/api/remove-bg', { method: 'POST', body: form });
+      const res = await fetch(`${getApiBase()}/api/remove-bg`, { method: 'POST', body: form });
       if (!res.ok) {
         let errMsg = `Server error (${res.status})`;
         try {

@@ -46,7 +46,9 @@ HTTP_SESSION = requests.Session()
 
 app = Flask(__name__, static_folder=str(FRONTEND_DIR), static_url_path="")
 app.config["MAX_CONTENT_LENGTH"] = None
-CORS(app)
+# Allow CORS: in production restrict to the Vercel frontend URL via env var ALLOWED_ORIGIN
+_ALLOWED_ORIGIN = os.environ.get("ALLOWED_ORIGIN", "*")
+CORS(app, origins=_ALLOWED_ORIGIN, supports_credentials=False)
 
 
 @app.after_request
