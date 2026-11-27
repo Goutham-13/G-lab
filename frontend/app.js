@@ -5,7 +5,7 @@
 (() => {
   'use strict';
 
-  const VALID_VIEWS = ['home', 'qr', 'pdf', 'merge', 'link', 'bg', 'compress', 'color'];
+  const VALID_VIEWS = ['home', 'qr', 'pdf', 'merge', 'link', 'bg', 'compress', 'color', 'convert'];
 
   const panels = {
     home: document.getElementById('panel-home'),
@@ -16,6 +16,7 @@
     bg: document.getElementById('panel-bg'),
     compress: document.getElementById('panel-compress'),
     color: document.getElementById('panel-color'),
+    convert: document.getElementById('panel-convert'),
   };
   const navBackHomeBtn = document.getElementById('navBackHomeBtn');
   const homeSearchWrap = document.getElementById('homeSearchWrap');

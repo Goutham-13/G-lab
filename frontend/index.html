@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>CleanLab — QR, PDF, Background Remover, Compressor, Color Picker &amp; Link Tools</title>
+  <title>CleanLab — QR, PDF, Background Remover, Compressor, Image Converter, Color Picker &amp; Link Tools</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none'%3E%3Crect x='2' y='2' width='20' height='20' rx='5' fill='%23ffffff' stroke='%230a0a0a' stroke-width='2'/%3E%3Crect x='6' y='6' width='5' height='5' fill='%230a0a0a'/%3E%3Crect x='13' y='6' width='5' height='5' fill='%230a0a0a'/%3E%3Crect x='6' y='13' width='5' height='5' fill='%230a0a0a'/%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -48,7 +48,7 @@
       <div class="hero">
         <h1>Simple tools in your browser.</h1>
         <p class="hero-desc">
-          Create QR codes, split or merge PDFs, remove backgrounds, compress files, pick image colors, and preview or download from any link.
+          Create QR codes, split or merge PDFs, remove backgrounds, compress files, convert images, pick colors, and preview or download from any link.
         </p>
       </div>
 
@@ -142,6 +142,21 @@
           </div>
           <h2>Color Picker</h2>
           <p>Upload any image to extract exact color codes, view codes pinned on the image, and copy in one click.</p>
+          <span class="feature-link">Open →</span>
+        </article>
+
+        <article class="feature-card" data-navigate="convert" data-keywords="image converter convert png jpg jpeg webp avif gif bmp tiff ico format quality transparency size" tabindex="0" role="button" aria-label="Open Image Converter">
+          <div class="feature-icon" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+              <rect x="3" y="4" width="12" height="11" rx="2" stroke="#0a0a0a" stroke-width="1.8"/>
+              <path d="m16.5 4.5 2.5 2.5-2.5 2.5" stroke="#0a0a0a" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M19 7h-2.5" stroke="#0a0a0a" stroke-width="1.7" stroke-linecap="round"/>
+              <rect x="9" y="10" width="12" height="10" rx="2" fill="#ffffff" stroke="#0a0a0a" stroke-width="1.8"/>
+              <path d="M11.5 17.2 14.2 14l2.1 2.2 1.7-1.6 1.5 2.6" stroke="#0a0a0a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <h2>Image Converter</h2>
+          <p>Convert PNG, JPG, WebP, AVIF, GIF, BMP, TIFF, and ICO with a quality slider, live preview, size comparison, and transparency control.</p>
           <span class="feature-link">Open →</span>
         </article>
       </div>
@@ -1058,6 +1073,225 @@
       </div>
     </section>
 
+    <!-- ================================================================
+         TOOL 8: IMAGE CONVERTER (PNG, JPG, WEBP, AVIF, GIF, BMP, TIFF, ICO)
+         ================================================================ -->
+    <section id="panel-convert" class="panel" aria-label="Image Converter">
+      <div class="page-head">
+        <div class="title-with-help">
+          <h2>Image Converter</h2>
+          <div class="help-tip">
+            <button type="button" class="help-trigger" aria-label="Image Converter guide">?</button>
+            <div class="help-popover" role="tooltip">
+              <strong>Image Converter Guide</strong>
+              <p>Convert images cleanly between PNG, JPG, WebP, AVIF, GIF, BMP, TIFF, and ICO.</p>
+              <p>Use the quality slider, toggle before/after comparison, track original vs converted size percentage, and preserve alpha transparency automatically when supported.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 1: DROPZONE -->
+      <div id="convDropzone" class="dropzone">
+        <input type="file" id="convFileInput" accept="image/*,.avif,.webp,.tif,.tiff,.bmp,.ico,.gif,.png,.jpg,.jpeg" hidden />
+        <p class="dropzone-title">Drop your image here — PNG, JPG, WebP, AVIF, GIF, BMP, TIFF, or ICO</p>
+        <div class="dropzone-actions">
+          <button type="button" id="convBrowseBtn" class="btn btn-primary">Choose Image</button>
+          <button type="button" id="convSampleBtn" class="btn btn-secondary">Try Sample Transparent PNG</button>
+        </div>
+      </div>
+
+      <!-- FILE INFO BANNER -->
+      <div id="convFileBanner" class="file-banner">
+        <div class="file-meta">
+          <strong id="convFileName">image.png</strong>
+          <span id="convOrigMetaBadge" class="muted-val">PNG · 0 × 0</span>
+          <span id="convOrigSizeBadge" class="muted-val">0 KB</span>
+          <span id="convAlphaBadge" class="conv-badge">Opaque</span>
+        </div>
+        <button type="button" id="convReplaceBtn" class="btn btn-secondary btn-sm">Change Image</button>
+      </div>
+
+      <!-- STEP 2: CONVERTER WORKSPACE -->
+      <div id="convWorkspace" class="pdf-workspace">
+        <!-- LEFT: PREVIEW STAGE & ORIGINAL VS CONVERTED SIZE COMPARISON -->
+        <div class="card">
+          <div class="field-label-row" style="margin-bottom:10px;">
+            <span class="field-label" style="margin:0;">Preview</span>
+            <span id="convResultMeta" class="muted-val">Waiting...</span>
+          </div>
+
+          <div id="convPreviewTabs" class="seg-tabs compact" style="margin-bottom:10px;" role="tablist" aria-label="Preview mode">
+            <button type="button" class="seg-tab active" data-conv-view="converted">Converted</button>
+            <button type="button" class="seg-tab" data-conv-view="compare">Compare</button>
+            <button type="button" class="seg-tab" data-conv-view="original">Original</button>
+          </div>
+
+          <div id="convPreviewStage" class="bg-preview-stage bg-checker">
+            <img id="convResultImg" class="bg-stage-img" alt="Converted image preview" />
+            <div id="convCompareWrap" class="bg-compare-wrap" style="display:none;">
+              <img id="convCompareResultImg" class="bg-compare-img" alt="Converted image comparison" />
+              <div id="convCompareOverlay" class="bg-compare-overlay">
+                <img id="convCompareOrigImg" class="bg-compare-img" alt="Original image comparison" />
+              </div>
+              <div id="convCompareLine" class="bg-compare-line" aria-hidden="true">
+                <span class="bg-compare-handle">↔</span>
+              </div>
+              <input id="convCompareSlider" class="bg-compare-range" type="range" min="0" max="100" value="50" aria-label="Compare original and converted image" />
+            </div>
+            <img id="convOriginalImg" class="bg-stage-img" style="display:none;" alt="Original uploaded image preview" />
+          </div>
+
+          <p id="convPreviewNote" class="muted-val" style="display:none;margin:8px 0 0;"></p>
+
+          <div id="convBackdropBar" class="bg-backdrop-bar">
+            <span class="muted-val">Backdrop</span>
+            <div class="bg-swatch-row" role="group" aria-label="Preview backdrop">
+              <button type="button" class="bg-swatch active bg-swatch-checker" data-backdrop="checker" title="Transparent checkerboard" aria-label="Transparent checkerboard"></button>
+              <button type="button" class="bg-swatch" data-backdrop="#ffffff" style="background:#ffffff;" title="White" aria-label="White backdrop"></button>
+              <button type="button" class="bg-swatch" data-backdrop="#0a0a0a" style="background:#0a0a0a;" title="Black" aria-label="Black backdrop"></button>
+              <button type="button" class="bg-swatch" data-backdrop="#e5e7eb" style="background:#e5e7eb;" title="Light gray" aria-label="Gray backdrop"></button>
+              <label class="bg-swatch-picker" title="Custom backdrop color">
+                <input id="convBackdropColor" type="color" value="#f3f4f6" aria-label="Custom backdrop color" />
+              </label>
+            </div>
+          </div>
+
+          <div id="convStatsDeck" class="conv-stats-deck" style="display:none;">
+            <div class="comp-stats-grid conv-stats-grid">
+              <div class="comp-stat-card">
+                <span class="muted-val">Original</span>
+                <strong id="convStatOrigSize">—</strong>
+                <span id="convStatOrigSub" class="conv-stat-sub">—</span>
+              </div>
+              <div class="comp-stat-card">
+                <span class="muted-val">Converted</span>
+                <strong id="convStatNewSize">—</strong>
+                <span id="convStatNewSub" class="conv-stat-sub">—</span>
+              </div>
+              <div class="comp-stat-card">
+                <span class="muted-val">Comparison</span>
+                <strong id="convStatDiffPct">—</strong>
+                <span id="convStatDiffSub" class="conv-stat-sub">—</span>
+              </div>
+            </div>
+
+            <div class="conv-bars" aria-label="File size ratio comparison">
+              <div class="conv-bar-row">
+                <span class="conv-bar-label">Original</span>
+                <div class="conv-bar-track"><div id="convOrigBarFill" class="conv-bar-fill conv-bar-orig" style="width:100%;"></div></div>
+                <span id="convOrigBarPct" class="conv-bar-pct">100%</span>
+              </div>
+              <div class="conv-bar-row">
+                <span class="conv-bar-label">Converted</span>
+                <div class="conv-bar-track"><div id="convNewBarFill" class="conv-bar-fill conv-bar-new" style="width:100%;"></div></div>
+                <span id="convNewBarPct" class="conv-bar-pct">—</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: OUTPUT FORMAT, QUALITY, TRANSPARENCY & EXPORT -->
+        <div class="card">
+          <div class="control-block" style="margin-top:0;">
+            <div class="field-label-row">
+              <label class="field-label" style="margin:0;">Output Format</label>
+              <span id="convAlphaCapTag" class="muted-val">Transparency supported</span>
+            </div>
+            <div id="convFormatTabs" class="seg-tabs compact conv-format-grid" style="margin-top:8px;" role="tablist" aria-label="Output format">
+              <button type="button" class="seg-tab" data-conv-fmt="png">PNG</button>
+              <button type="button" class="seg-tab" data-conv-fmt="jpg">JPG</button>
+              <button type="button" class="seg-tab active" data-conv-fmt="webp">WebP</button>
+              <button type="button" class="seg-tab" data-conv-fmt="avif">AVIF</button>
+              <button type="button" class="seg-tab" data-conv-fmt="gif">GIF</button>
+              <button type="button" class="seg-tab" data-conv-fmt="bmp">BMP</button>
+              <button type="button" class="seg-tab" data-conv-fmt="tiff">TIFF</button>
+              <button type="button" class="seg-tab" data-conv-fmt="ico">ICO</button>
+            </div>
+            <p id="convFormatHint" class="muted-val" style="margin:6px 0 0;">WebP · Modern compression · Preserves transparency</p>
+          </div>
+
+          <div id="convQualityBlock" class="control-block">
+            <div class="field-label-row">
+              <label class="field-label" for="convQualityRange" style="margin:0;">Quality</label>
+              <span id="convQualityVal" class="muted-val">88%</span>
+            </div>
+            <input id="convQualityRange" class="range-slider" type="range" min="1" max="100" step="1" value="88" style="margin-top:8px;" />
+            <div class="conv-quality-foot">
+              <span id="convQualityHint" class="muted-val">Balanced visual fidelity and size</span>
+              <label id="convLosslessWrap" class="check-label" style="margin:0;">
+                <input type="checkbox" id="convLosslessCheck" />
+                <span>Lossless</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="control-block">
+            <div class="field-label-row">
+              <label class="field-label" style="margin:0;">Scale</label>
+              <span id="convDimVal" class="muted-val">—</span>
+            </div>
+            <div id="convScaleTabs" class="seg-tabs compact" style="margin-top:8px;" role="tablist" aria-label="Output scale">
+              <button type="button" class="seg-tab active" data-conv-scale="100">100%</button>
+              <button type="button" class="seg-tab" data-conv-scale="75">75%</button>
+              <button type="button" class="seg-tab" data-conv-scale="50">50%</button>
+              <button type="button" class="seg-tab" data-conv-scale="25">25%</button>
+            </div>
+          </div>
+
+          <div id="convAlphaBlock" class="control-block">
+            <label class="field-label" style="margin-bottom:6px;">Transparency</label>
+            <div id="convPreserveWrap">
+              <label class="check-label">
+                <input type="checkbox" id="convPreserveAlphaCheck" checked />
+                <span>Preserve transparency (keep alpha channel)</span>
+              </label>
+              <p id="convAlphaStatus" class="muted-val" style="margin:5px 0 0;">Alpha channel will be kept intact.</p>
+            </div>
+            <div id="convMatteWrap" class="conv-matte-wrap" style="display:none;">
+              <p id="convMatteLabel" class="muted-val" style="margin:0 0 8px;">Transparent pixels will be filled with background color:</p>
+              <div class="conv-matte-row">
+                <button type="button" class="bg-swatch active" data-matte="#ffffff" style="background:#ffffff;" title="White" aria-label="White matte"></button>
+                <button type="button" class="bg-swatch" data-matte="#0a0a0a" style="background:#0a0a0a;" title="Black" aria-label="Black matte"></button>
+                <button type="button" class="bg-swatch" data-matte="#e5e7eb" style="background:#e5e7eb;" title="Light gray" aria-label="Gray matte"></button>
+                <label class="bg-swatch-picker" title="Custom background fill">
+                  <input id="convMatteColor" type="color" value="#ffffff" aria-label="Custom matte background color" />
+                </label>
+                <span id="convMatteHex" class="muted-val">#ffffff</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="control-block">
+            <label class="field-label" for="convOutputName">File Name</label>
+            <input id="convOutputName" class="text-input" type="text" value="converted" placeholder="image-name" />
+          </div>
+
+          <div id="convErrorBox" class="alert-box"></div>
+
+          <button type="button" id="convRunBtn" class="btn btn-secondary" style="width:100%;">Re-convert Image</button>
+
+          <div id="convProgressStage" class="progress-wrap" style="display:none;">
+            <div class="progress-track">
+              <div id="convProgressFill" class="progress-fill"></div>
+            </div>
+            <p id="convProgressText" class="muted-val" style="margin:8px 0 0;">Converting image...</p>
+          </div>
+
+          <div id="convResultsDeck" class="results-deck" style="display:none;">
+            <div class="field-label-row" style="margin-bottom:10px;">
+              <span class="field-label" style="margin:0;">Export</span>
+              <span id="convExportMeta" class="muted-val">Ready</span>
+            </div>
+            <div class="color-actions-row">
+              <button type="button" id="convDownloadBtn" class="btn btn-primary" style="width:100%;">Download WEBP</button>
+              <button type="button" id="convCopyBtn" class="btn btn-secondary" style="width:100%;">Copy Image</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
   </main>
 
   <!-- PAGE ZOOM MODAL FOR PDF THUMBNAILS -->
@@ -1092,5 +1326,6 @@
   <script src="bg-studio.js"></script>
   <script src="compress-studio.js"></script>
   <script src="color-studio.js"></script>
+  <script src="convert-studio.js"></script>
 </body>
 </html>

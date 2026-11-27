@@ -48,7 +48,28 @@ app = Flask(__name__, static_folder=str(FRONTEND_DIR), static_url_path="")
 app.config["MAX_CONTENT_LENGTH"] = None
 # Allow CORS: in production restrict to the Vercel frontend URL via env var ALLOWED_ORIGIN
 _ALLOWED_ORIGIN = os.environ.get("ALLOWED_ORIGIN", "*")
-CORS(app, origins=_ALLOWED_ORIGIN, supports_credentials=False)
+CORS(
+    app,
+    origins=_ALLOWED_ORIGIN,
+    supports_credentials=False,
+    expose_headers=[
+        "X-Original-Size",
+        "X-Converted-Size",
+        "X-Compressed-Size",
+        "X-Compress-Kind",
+        "X-Compress-Note",
+        "X-Output-Ext",
+        "X-Output-Mime",
+        "X-Image-Width",
+        "X-Image-Height",
+        "X-Source-Width",
+        "X-Source-Height",
+        "X-Has-Alpha",
+        "X-Output-Alpha",
+        "X-Convert-Note",
+        "X-Model-Used",
+    ],
+)
 
 
 @app.after_request
@@ -1547,6 +1568,228 @@ def api_compress():
     except Exception as exc:
         shutil.rmtree(tmpdir, ignore_errors=True)
         return jsonify({"error": f"Compression failed: {exc}"}), 500
+
+
+_CONVERT_FORMATS = {
+    "png": (".png", "image/png", True, "PNG"),
+    "jpg": (".jpg", "image/jpeg", False, "JPEG"),
+    "webp": (".webp", "image/webp", True, "WEBP"),
+    "avif": (".avif", "image/avif", True, "AVIF"),
+    "gif": (".gif", "image/gif", True, "GIF"),
+    "bmp": (".bmp", "image/bmp", False, "BMP"),
+    "tiff": (".tiff", "image/tiff", True, "TIFF"),
+    "ico": (".ico", "image/x-icon", True, "ICO"),
+}
+
+
+def _image_has_alpha(im: Image.Image) -> bool:
+    """Return True if the image has an active alpha channel or transparent pixels."""
+    if "A" in im.getbands():
+        lo, _hi = im.getchannel("A").getextrema()
+        return lo < 255
+    if im.mode == "P" and "transparency" in im.info:
+        lo, _hi = im.convert("RGBA").getchannel("A").getextrema()
+        return lo < 255
+    return False
+
+
+def _flatten_to_matte(im: Image.Image, matte_rgba: tuple[int, int, int, int]) -> Image.Image:
+    """Composite any transparent pixels onto an opaque RGB matte background."""
+    if im.mode in ("RGBA", "LA") or (im.mode == "P" and "transparency" in im.info):
+        rgba = im.convert("RGBA")
+        bg = Image.new("RGBA", rgba.size, (matte_rgba[0], matte_rgba[1], matte_rgba[2], 255))
+        return Image.alpha_composite(bg, rgba).convert("RGB")
+    return im.convert("RGB") if im.mode != "RGB" else im
+
+
+def _fit_ico_canvas(im: Image.Image, transparent_pad: bool = True) -> tuple[Image.Image, list[tuple[int, int]]]:
+    """Fit an image proportionally inside a square <=256px canvas for multi-size ICO output."""
+    w, h = im.size
+    side = min(256, max(w, h, 16))
+    if w > 256 or h > 256 or w != h:
+        scale_im = im.copy()
+        scale_im.thumbnail((side, side), Image.Resampling.LANCZOS)
+        use_rgba = transparent_pad or ("A" in scale_im.getbands())
+        bg = (0, 0, 0, 0) if use_rgba else (255, 255, 255)
+        base = Image.new("RGBA" if use_rgba else "RGB", (side, side), bg)
+        ox = (side - scale_im.width) // 2
+        oy = (side - scale_im.height) // 2
+        if "A" in scale_im.getbands():
+            base.paste(scale_im, (ox, oy), mask=scale_im.getchannel("A"))
+        else:
+            base.paste(scale_im, (ox, oy))
+        im = base
+    sizes = [s for s in [(16, 16), (32, 32), (48, 48), (64, 64), (128, 128), (256, 256)] if s[0] <= im.width]
+    return im, (sizes or [(im.width, im.height)])
+
+
+def _convert_image_bytes(
+    raw_bytes: bytes,
+    target_fmt: str,
+    quality: int,
+    lossless: bool,
+    preserve_alpha: bool,
+    matte_rgba: tuple[int, int, int, int],
+    scale: int,
+) -> tuple[bytes, dict]:
+    """Convert an uploaded image to target_fmt while optionally preserving alpha and scaling."""
+    fmt_key = {"jpeg": "jpg", "tif": "tiff"}.get(target_fmt, target_fmt)
+    if fmt_key not in _CONVERT_FORMATS:
+        raise ValueError(f"Unsupported output format: {target_fmt}")
+
+    out_ext, out_mime, supports_alpha, pil_fmt = _CONVERT_FORMATS[fmt_key]
+    src = Image.open(io.BytesIO(raw_bytes))
+    icc = src.info.get("icc_profile")
+    im = ImageOps.exif_transpose(src)
+    src_w, src_h = im.size
+    has_alpha = _image_has_alpha(im)
+
+    if scale < 100:
+        new_w = max(1, round(src_w * scale / 100))
+        new_h = max(1, round(src_h * scale / 100))
+        im = im.resize((new_w, new_h), Image.Resampling.LANCZOS)
+
+    keep_alpha = supports_alpha and preserve_alpha and has_alpha
+    if keep_alpha:
+        im = im.convert("RGBA") if im.mode != "RGBA" else im
+        output_alpha = True
+    elif supports_alpha and preserve_alpha and im.mode in ("RGB", "L"):
+        im = im.convert("RGB")
+        output_alpha = False
+    else:
+        im = _flatten_to_matte(im, matte_rgba)
+        output_alpha = False
+
+    out_w, out_h = im.size
+    buf = io.BytesIO()
+    save_kw: dict = {"format": pil_fmt}
+
+    if fmt_key == "png":
+        save_kw.update({"optimize": True, "compress_level": 9})
+        if icc:
+            save_kw["icc_profile"] = icc
+        note = "Lossless PNG (alpha preserved)" if output_alpha else "Lossless PNG"
+    elif fmt_key == "jpg":
+        save_kw.update({"quality": quality, "optimize": True, "progressive": True})
+        if quality >= 85:
+            save_kw["subsampling"] = 0
+        if icc:
+            save_kw["icc_profile"] = icc
+        note = f"JPEG Q{quality}" + (" (transparency filled)" if has_alpha else "")
+    elif fmt_key == "webp":
+        save_kw["method"] = 6
+        if icc:
+            save_kw["icc_profile"] = icc
+        if lossless:
+            save_kw["lossless"] = True
+            note = "Lossless WebP" + (" (alpha preserved)" if output_alpha else "")
+        else:
+            save_kw["quality"] = quality
+            note = f"WebP Q{quality}" + (" (alpha preserved)" if output_alpha else "")
+    elif fmt_key == "avif":
+        q_eff = 100 if lossless else quality
+        save_kw["quality"] = q_eff
+        note = ("Lossless AVIF" if lossless else f"AVIF Q{q_eff}") + (" (alpha preserved)" if output_alpha else "")
+    elif fmt_key == "gif":
+        save_kw["optimize"] = True
+        note = "GIF (transparency preserved)" if output_alpha else "GIF (256 colors)"
+    elif fmt_key == "bmp":
+        note = "Uncompressed BMP" + (" (transparency filled)" if has_alpha else "")
+    elif fmt_key == "tiff":
+        save_kw["compression"] = "tiff_deflate"
+        if icc:
+            save_kw["icc_profile"] = icc
+        note = "Lossless TIFF" + (" (alpha preserved)" if output_alpha else "")
+    elif fmt_key == "ico":
+        im, ico_sizes = _fit_ico_canvas(im, transparent_pad=preserve_alpha)
+        out_w, out_h = im.size
+        save_kw["sizes"] = ico_sizes
+        note = f"Multi-size ICO ({out_w}x{out_h})"
+
+    im.save(buf, **save_kw)
+    return buf.getvalue(), {
+        "ext": out_ext,
+        "mime": out_mime,
+        "src_w": src_w,
+        "src_h": src_h,
+        "out_w": out_w,
+        "out_h": out_h,
+        "has_alpha": has_alpha,
+        "output_alpha": output_alpha,
+        "note": note,
+    }
+
+
+@app.route("/api/image-convert", methods=["POST"])
+def api_image_convert():
+    """Stateless high-quality Image Converter supporting PNG, JPG, WebP, AVIF, GIF, BMP, TIFF, ICO."""
+    upload = request.files.get("image")
+    if not upload:
+        return jsonify({"error": "No image file provided."}), 400
+
+    raw_bytes = upload.read()
+    if not raw_bytes:
+        return jsonify({"error": "Uploaded image is empty."}), 400
+
+    target_fmt = (request.form.get("format") or "webp").strip().lower()
+    lossless = (request.form.get("lossless") or "0").strip().lower() in ("1", "true", "yes", "on")
+    preserve_alpha = (request.form.get("preserve_alpha") or "1").strip().lower() in ("1", "true", "yes", "on")
+
+    try:
+        quality = max(1, min(100, int(request.form.get("quality") or 88)))
+    except ValueError:
+        quality = 88
+    try:
+        scale = max(10, min(100, int(request.form.get("scale") or 100)))
+    except ValueError:
+        scale = 100
+
+    try:
+        matte_rgba = _parse_hex_rgba(request.form.get("matte_color", "#ffffff"))
+        if matte_rgba is None:
+            matte_rgba = (255, 255, 255, 255)
+    except ValueError as err:
+        return jsonify({"error": str(err)}), 400
+
+    try:
+        out_bytes, meta = _convert_image_bytes(
+            raw_bytes=raw_bytes,
+            target_fmt=target_fmt,
+            quality=quality,
+            lossless=lossless,
+            preserve_alpha=preserve_alpha,
+            matte_rgba=matte_rgba,
+            scale=scale,
+        )
+    except ValueError as err:
+        return jsonify({"error": str(err)}), 400
+    except Exception as exc:
+        return jsonify({"error": f"Image conversion failed: {exc}"}), 500
+
+    orig_name = upload.filename or "image"
+    stem = sanitize_filename(Path(orig_name).stem or "converted", fallback="converted")
+    out_name = f"{stem}{meta['ext']}"
+
+    return Response(
+        out_bytes,
+        mimetype=meta["mime"],
+        headers={
+            "Content-Length": str(len(out_bytes)),
+            "Content-Disposition": f'attachment; filename="{out_name}"',
+            "X-Original-Size": str(len(raw_bytes)),
+            "X-Converted-Size": str(len(out_bytes)),
+            "X-Source-Width": str(meta["src_w"]),
+            "X-Source-Height": str(meta["src_h"]),
+            "X-Image-Width": str(meta["out_w"]),
+            "X-Image-Height": str(meta["out_h"]),
+            "X-Has-Alpha": "1" if meta["has_alpha"] else "0",
+            "X-Output-Alpha": "1" if meta["output_alpha"] else "0",
+            "X-Output-Ext": meta["ext"],
+            "X-Output-Mime": meta["mime"],
+            "X-Convert-Note": meta["note"].encode("ascii", "ignore").decode("ascii"),
+            "Cache-Control": "no-store",
+        },
+    )
 
 
 if __name__ == "__main__":
