@@ -1035,12 +1035,16 @@ def api_proxy_file():
         return f"Download failed: {err}", 502
 
     ct = upstream.headers.get("Content-Type", "application/octet-stream")
+    # Sanitize to ASCII — Waitress encodes headers as latin-1 and crashes on Unicode
+    ct = ct.encode("ascii", "ignore").decode("ascii") or "application/octet-stream"
+    cl = upstream.headers.get("Content-Length", "")
+    cl = cl.encode("ascii", "ignore").decode("ascii") if cl else ""
     headers = {
         "Content-Type": ct,
         "Content-Disposition": f'attachment; filename="{name}"',
     }
-    if upstream.headers.get("Content-Length"):
-        headers["Content-Length"] = upstream.headers["Content-Length"]
+    if cl:
+        headers["Content-Length"] = cl
 
     return Response(
         stream_with_context(upstream.iter_content(chunk_size=65536)),
