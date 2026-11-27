@@ -1,34 +1,23 @@
 /**
  * CleanLab — API Base URL Configuration & Smart Resolver
  *
- * Backend is hosted on Render: https://clean-lab.onrender.com
- * Frontend is hosted on Vercel: https://g-lab.vercel.app
+ * Set window.CLEANLAB_API_BASE to your backend URL when you have one hosted.
+ * Leave as "" to auto-detect the local Python server at 127.0.0.1:8000.
  *
- * Local dev (127.0.0.1 / localhost): checks local server first, then Render.
- * Production (Vercel): checks CLEANLAB_API_BASE (Render), then falls back to 127.0.0.1:8000 if running locally.
+ * Example (once you have a backend host):
+ *   window.CLEANLAB_API_BASE = "https://your-backend-url.com";
  */
-window.CLEANLAB_API_BASE = "https://clean-lab.onrender.com";
+window.CLEANLAB_API_BASE = "";
 
 window.resolveCleanLabApiBase = async function resolveCleanLabApiBase() {
   const configured = window.CLEANLAB_API_BASE
     ? String(window.CLEANLAB_API_BASE).replace(/\/$/, "")
     : "";
-  const isLocalHost =
-    location.hostname === "127.0.0.1" || location.hostname === "localhost";
 
   const candidates = [];
-  if (location.protocol !== "file:" && isLocalHost) {
-    candidates.push("");
-  }
-  if (configured) {
-    candidates.push(configured);
-  }
-  if (location.protocol !== "file:" && !isLocalHost) {
-    candidates.push("");
-  }
-  if (!candidates.includes("http://127.0.0.1:8000")) {
-    candidates.push("http://127.0.0.1:8000");
-  }
+  if (configured) candidates.push(configured);
+  if (!candidates.includes("http://127.0.0.1:8000")) candidates.push("http://127.0.0.1:8000");
+  if (location.protocol !== "file:" && !candidates.includes(""))  candidates.push("");
 
   for (const base of candidates) {
     try {
