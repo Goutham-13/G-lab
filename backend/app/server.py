@@ -653,7 +653,11 @@ def api_preview():
         return f"Preview failed: {err}", 502
 
     excluded = {"content-encoding", "transfer-encoding", "connection", "content-security-policy"}
-    resp_headers = {k: v for k, v in upstream.headers.items() if k.lower() not in excluded}
+    resp_headers = {
+        k.encode("ascii", "ignore").decode("ascii"): v.encode("ascii", "ignore").decode("ascii")
+        for k, v in upstream.headers.items()
+        if k.lower() not in excluded
+    }
     if "Content-Type" not in resp_headers:
         resp_headers["Content-Type"] = "application/octet-stream"
 
