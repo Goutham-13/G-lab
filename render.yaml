@@ -2,15 +2,16 @@ services:
   - type: web
     name: cleanlab-api
     runtime: python
-    rootDir: backend/app
-    buildCommand: pip install -r requirements.txt
-    startCommand: python server.py
+    buildCommand: pip install -r backend/app/requirements.txt
+    startCommand: python backend/app/server.py
     plan: free
     envVars:
       - key: PORT
         generateValue: false
         value: 10000
       - key: ALLOWED_ORIGIN
-        sync: false   # Set this in Render dashboard to your Vercel URL e.g. https://g-lab.vercel.app
+        sync: false
+      - key: PYTHON_VERSION
+        value: 3.11.9
     healthCheckPath: /api/health
     autoDeploy: true
