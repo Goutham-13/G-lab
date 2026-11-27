@@ -56,6 +56,14 @@ def add_security_headers(response):
     response.headers.setdefault("X-Content-Type-Options", "nosniff")
     response.headers.setdefault("X-Frame-Options", "SAMEORIGIN")
     response.headers.setdefault("Referrer-Policy", "strict-origin-when-cross-origin")
+    # Sanitize ALL response headers to ASCII so Waitress never throws
+    # UnicodeEncodeError('latin-1') when upstream servers return Unicode values
+    for key in list(response.headers.keys()):
+        val = response.headers[key]
+        if isinstance(val, str):
+            safe = val.encode("ascii", "ignore").decode("ascii")
+            if safe != val:
+                response.headers[key] = safe
     return response
 
 
@@ -74,7 +82,9 @@ def cleanup_old_downloads(max_age_sec: int = 300) -> None:
 
 
 def sanitize_filename(name: str, fallback: str = "download") -> str:
-    clean = re.sub(r'[<>:"/\\|?*\x00-\x1f]', "_", (name or "").strip())
+    # Strip non-ASCII first so latin-1 header encoding never fails
+    name = (name or "").encode("ascii", "ignore").decode("ascii")
+    clean = re.sub(r'[<>:"/\\|?*\x00-\x1f]', "_", name.strip())
     clean = re.sub(r"\s+", " ", clean).strip(" .")
     return clean[:110] or fallback
 
