@@ -2,7 +2,7 @@ services:
   - type: web
     name: cleanlab-api
     runtime: python
-    buildCommand: pip install -r backend/app/requirements.txt
+    buildCommand: pip install -r requirements.txt
     startCommand: python backend/app/server.py
     plan: free
     envVars:
